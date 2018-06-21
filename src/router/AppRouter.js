@@ -12,10 +12,18 @@ import DashboardPage from '../pages/DashboardPage';
 const AppRouter = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" component={LandingPage} />
-      <Route exact path="/dashboard" component={DashboardPage} />
+      <Route
+        exact
+        path="/"
+        component={LandingPage}
+      />
+      <Route
+        exact
+        path="/dashboard"
+        component={DashboardPage}
+      />
     </Switch>
   </BrowserRouter>
-)
+);
 
 export default AppRouter;
