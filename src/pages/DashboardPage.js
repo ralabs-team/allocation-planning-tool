@@ -8,8 +8,6 @@ import TimelineCalendar from '../components/TimelineCalendar';
 import scheduler from '../mock/scheduler';
 import users from '../mock/users.json';
 
-console.log('groups', scheduler);
-
 const DashboardPage = () => (
   <div>
     <h1>Dashboard Page</h1>
