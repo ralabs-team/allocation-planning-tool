@@ -34,7 +34,7 @@
   },
   "git": {
     "scripts": {
-
+      "pre-commit": "npm run lint"
     }
   }
 }

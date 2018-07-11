@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import TimelineCalendar from '../components/TimelineCalendar';
 
 // mock data
-import { scheduler } from '../mock/scheduler';
-import users from '../mock/Users.json';
+import scheduler from '../mock/scheduler';
+import users from '../mock/users.json';
 
 console.log('groups', scheduler);
 

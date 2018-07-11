@@ -17,11 +17,25 @@ const TimelineCalendar = (props) => {
       title: `${firstName} ${lastName}`,
     };
   });
+  const items = scheduler.map((item) => {
+    const {
+      _id, userId, taskName, startTime, endTime,
+    } = item;
+
+    return {
+      ...item,
+      id: _id,
+      group: userId,
+      title: taskName,
+      start_time: startTime,
+      end_time: endTime,
+    };
+  });
 
   return (
     <Timeline
       groups={groups}
-      items={scheduler}
+      items={items}
       defaultTimeStart={moment().add(-12, 'days')}
       defaultTimeEnd={moment().add(12, 'days')}
       sidebarContent={<div>lala</div>}
