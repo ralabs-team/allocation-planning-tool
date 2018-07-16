@@ -11,6 +11,7 @@ module.exports = {
         "es6": true,
         "node": true
     },
+    "parser": "babel-eslint",
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "indent": [2, 2, { "SwitchCase": 1 }],
