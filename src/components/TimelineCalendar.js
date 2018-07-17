@@ -62,6 +62,16 @@ const TimelineCalendar = (props) => {
     console.log('group ', group);
     console.log('e ', e);
     console.log('time ', time);
+
+    const modalData = {
+      type: 'TASK',
+      data: {
+        employee: employees[group],
+        time,
+      },
+    };
+
+    props.openModal(modalData);
   };
 
   return (

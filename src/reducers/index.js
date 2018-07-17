@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 
 // reducers
+import modals from './modals';
 import schedulers from './schedulers';
 import users from './users';
 
 const appReducer = combineReducers({
+  modals,
   schedulers,
   users,
 });
