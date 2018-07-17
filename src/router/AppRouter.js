@@ -1,27 +1,18 @@
 import React from 'react';
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
 
 // components
 import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
 
+// custom routes
+import LayoutRoute from './LayoutRoute';
+
 const AppRouter = () => (
   <BrowserRouter>
     <Switch>
-      <Route
-        exact
-        path="/"
-        component={LandingPage}
-      />
-      <Route
-        exact
-        path="/dashboard"
-        component={DashboardPage}
-      />
+      <LayoutRoute exact path="/" component={LandingPage} />
+      <LayoutRoute exact path="/dashboard" component={DashboardPage} />
     </Switch>
   </BrowserRouter>
 );
