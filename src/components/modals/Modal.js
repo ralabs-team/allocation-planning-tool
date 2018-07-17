@@ -5,13 +5,25 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+// components
+import TaskForm from './TaskForm';
 // actions
 import { hideModal } from '../../actions';
+// styles
+import './modal.css';
 
 const Modals = (props) => {
   const { isOpen, type, employee } = props.modalsData;
+
+  const renderModalContent = () => {
+    switch (type) {
+      case 'TASK':
+        return <TaskForm {...props} />;
+      default:
+        return <TaskForm {...props} />;
+    }
+  };
 
   return (
     <div>
@@ -21,20 +33,9 @@ const Modals = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{type}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {employee && `${employee.firstName} ${employee.lastName}`}
-          </DialogContentText>
+          {renderModalContent()}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={props.hideModal} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={props.hideModal} color="primary" autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );
@@ -42,6 +43,7 @@ const Modals = (props) => {
 
 const mapStateToProps = state => ({
   modalsData: state.modals,
+  projects: state.projects.allProjects,
 });
 
 const mapDispatchToProps = dispatch => ({

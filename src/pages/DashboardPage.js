@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import TimelineCalendar from '../components/TimelineCalendar';
 
 // actions
-import { getUsers, getSchedulers, openModal } from '../actions';
+import { getUsers, getSchedulers, openModal, getProjects } from '../actions';
 
 class DashboardPage extends Component {
   static propTypes = {
@@ -21,6 +21,7 @@ class DashboardPage extends Component {
   componentDidMount() {
     this.props.getUsers();
     this.props.getSchedulers();
+    this.props.getProjects();
   }
 
   render() {
@@ -62,6 +63,7 @@ const mapDispatchToProps = dispatch => ({
   getUsers: bindActionCreators(getUsers, dispatch),
   getSchedulers: bindActionCreators(getSchedulers, dispatch),
   openModal: bindActionCreators(openModal, dispatch),
+  getProjects: bindActionCreators(getProjects, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

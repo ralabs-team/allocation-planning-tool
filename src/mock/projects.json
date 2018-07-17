@@ -1,0 +1,53 @@
+[
+  {
+    "_id": "1",
+    "title": "first project",
+    "tasks": [
+      {
+        "_id": "1",
+        "title": "firsts task"
+      },
+      {
+        "_id": "2",
+        "title": "auth"
+      }
+    ],
+    "projectManagerId": "3",
+    "team": ["3", "12", "30"],
+    "status": "billable"
+  },
+  {
+    "_id": "2",
+    "title": "Foodies",
+    "tasks": [
+      {
+        "_id": "1",
+        "title": "firsts task"
+      },
+      {
+        "_id": "2",
+        "title": "auth"
+      }
+    ],
+    "projectManagerId": "2",
+    "team": ["2", "4", "5"],
+    "status": "waiting"
+  },
+  {
+    "_id": "3",
+    "title": "Alibi",
+    "tasks": [
+      {
+        "_id": "1",
+        "title": "firsts task"
+      },
+      {
+        "_id": "2",
+        "title": "auth"
+      }
+    ],
+    "projectManagerId": "2",
+    "team": ["2", "23", "121"],
+    "status": "development"
+  }
+]
