@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 // components
-import TaskForm from './TaskForm';
+import AllocationForm from './AllocationForm';
 // actions
-import { hideModal } from '../../../actions';
+import { hideModal, addAllocation } from '../../../actions';
 // styles
 import './modal.css';
 
@@ -15,10 +15,10 @@ const Modals = (props) => {
 
   const renderModalContent = () => {
     switch (type) {
-      case 'TASK':
-        return <TaskForm {...props} />;
+      case 'ALLOCATION':
+        return <AllocationForm {...props} />;
       default:
-        return <TaskForm {...props} />;
+        return <AllocationForm {...props} />;
     }
   };
 
@@ -45,6 +45,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hideModal: bindActionCreators(hideModal, dispatch),
+  addAllocation: bindActionCreators(addAllocation, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modals);

@@ -57,16 +57,11 @@ const TimelineCalendar = (props) => {
     console.log('time ', time);
   };
 
-  const onCanvasDoubleClick = (group, time, e) => {
-    /** will use for add new tasks */
-    console.log('group ', group);
-    console.log('e ', e);
-    console.log('time ', time);
-
+  const onCanvasDoubleClick = (group, time) => {
     const modalData = {
-      type: 'TASK',
+      type: 'ALLOCATION',
       data: {
-        employee: employees[group],
+        employee: employees[group - 1],
         time,
       },
     };

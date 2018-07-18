@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 import _ from 'lodash';
+import moment from 'moment';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { formatDate, parseDate } from 'react-day-picker/moment';
 import 'moment/locale/uk';
@@ -8,30 +12,30 @@ import 'react-day-picker/lib/style.css';
 
 import Autocomplete from '../autocomplete/Autocomplete';
 
-class TaskForm extends Component {
+class AllocationForm extends Component {
   state = {
     projectId: null,
     tasks: [],
     taskId: null,
   }
 
-  handleSelected = (type, value) => {
+  handleSelected = (type, id) => {
     let { tasks } = this.state;
+    const value = _.find(this.props.projects, ['_id', id]);
 
     if (type === 'project') {
-      const project = _.find(this.props.projects, ['_id', value]);
-
-      tasks = project ? project.tasks : this.state.tasks;
+      tasks = value ? value.tasks : this.state.tasks;
     }
 
     this.setState({
-      [`${type}Id`]: value,
+      [type]: value,
+      [`${type}Id`]: id,
       tasks,
     });
   }
 
   handleDayChange = (type, day) => {
-    this.setState({ [`${type}SelectedDay`]: day });
+    this.setState({ [`${type}Day`]: day });
   }
 
   handleInputChange = name => (event) => {
@@ -39,6 +43,30 @@ class TaskForm extends Component {
       [name]: event.target.value,
     });
   };
+
+  createAllocation = () => {
+    const { employee } = this.props.modalsData.data;
+    const { _id: taskId, title: taskTitle } = this.state.task;
+    const { _id: projectId, title: projectTitle } = this.state.project;
+    const { startDay, finishDay, notes } = this.state;
+
+    const allocation = {
+      _id: Math.random().toString(),
+      userId: employee._id,
+      taskId,
+      taskTitle,
+      projectId,
+      projectTitle,
+      startTime: moment(startDay),
+      endTime: moment(finishDay),
+      notes,
+      createAt: new Date(),
+      createBy: '1',
+    };
+
+    this.props.addAllocation(allocation);
+    this.props.hideModal();
+  }
 
   render() {
     const { projects } = this.props;
@@ -75,7 +103,7 @@ class TaskForm extends Component {
             id="note"
             label="Note"
             value={this.state.note}
-            onChange={this.handleInputChange('note')}
+            onChange={this.handleInputChange('notes')}
             fullWidth
             margin="normal"
           />
@@ -102,9 +130,25 @@ class TaskForm extends Component {
             onDayChange={day => this.handleDayChange('finish', day)}
           />
         </div>
+
+        <div>
+          <Button
+            variant="contained"
+            onClick={this.createAllocation}
+          >
+            Create
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={this.props.hideModal}
+          >
+            Cancel
+          </Button>
+        </div>
       </div>
     );
   }
 }
 
-export default TaskForm;
+export default AllocationForm;

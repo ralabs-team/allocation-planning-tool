@@ -1,8 +1,21 @@
 import scheduler from '../mock/scheduler';
 
-export const GET_SCHEDULERS = 'GET_SCHEDULERS';
+const GET_SCHEDULERS = 'GET_SCHEDULERS';
+const ADD_ALLOCATION = 'ADD_ALLOCATION';
 
-export const getSchedulers = () => ({
+const getSchedulers = () => ({
   type: GET_SCHEDULERS,
   payload: scheduler,
 });
+
+const addAllocation = allocation => ({
+  type: ADD_ALLOCATION,
+  payload: allocation,
+});
+
+export {
+  GET_SCHEDULERS,
+  ADD_ALLOCATION,
+  getSchedulers,
+  addAllocation,
+};

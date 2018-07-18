@@ -1,4 +1,4 @@
-import { GET_SCHEDULERS } from '../actions';
+import { GET_SCHEDULERS, ADD_ALLOCATION } from '../actions';
 
 const initialState = {
   allSchedulers: [],
@@ -9,6 +9,10 @@ export default function schedulers(state = initialState, action) {
     case GET_SCHEDULERS:
       return {
         allSchedulers: action.payload,
+      };
+    case ADD_ALLOCATION:
+      return {
+        allSchedulers: [...state.allSchedulers, action.payload],
       };
     default:
       return state;
