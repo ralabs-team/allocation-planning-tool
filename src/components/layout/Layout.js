@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import Modal from '../modals/Modal';
+import Modal from '../shared//modals/Modal';
 
 const Layout = (props) => {
   const childProps = _.clone(props);

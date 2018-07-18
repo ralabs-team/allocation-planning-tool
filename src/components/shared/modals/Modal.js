@@ -1,20 +1,17 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 // components
 import TaskForm from './TaskForm';
 // actions
-import { hideModal } from '../../actions';
+import { hideModal } from '../../../actions';
 // styles
 import './modal.css';
 
 const Modals = (props) => {
-  const { isOpen, type, employee } = props.modalsData;
+  const { isOpen, type } = props.modalsData;
 
   const renderModalContent = () => {
     switch (type) {

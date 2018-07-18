@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
-import Autocomplete from 'react-autocomplete';
+import TextField from '@material-ui/core/TextField';
+import _ from 'lodash';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { formatDate, parseDate } from 'react-day-picker/moment';
 import 'moment/locale/uk';
 import 'react-day-picker/lib/style.css';
 
+import Autocomplete from '../autocomplete/Autocomplete';
+
 class TaskForm extends Component {
   state = {
-    selectedProject: '',
+    projectId: null,
     tasks: [],
-    selectedTask: '',
+    taskId: null,
   }
 
-  handleTypes(type, value) {
-    this.setState({ [`selected${type}`]: value });
-  }
+  handleSelected = (type, value) => {
+    let { tasks } = this.state;
 
-  handleSelect(type, value, item) {
-    const tasks = item.tasks || this.state.tasks;
+    if (type === 'project') {
+      const project = _.find(this.props.projects, ['_id', value]);
+
+      tasks = project ? project.tasks : this.state.tasks;
+    }
 
     this.setState({
-      [`selected${type}`]: value,
+      [`${type}Id`]: value,
       tasks,
     });
   }
@@ -29,8 +34,15 @@ class TaskForm extends Component {
     this.setState({ [`${type}SelectedDay`]: day });
   }
 
+  handleInputChange = name => (event) => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
   render() {
     const { projects } = this.props;
+    const { tasks, taskId, projectId } = this.state;
 
     return (
       <div className="modal-content">
@@ -38,13 +50,10 @@ class TaskForm extends Component {
           <div>Project</div>
 
           <Autocomplete
-            getItemValue={item => item.title}
-            shouldItemRender={(item, value) => item.title.toLowerCase().indexOf(value.toLowerCase()) > -1}
+            handleChange={this.handleSelected}
             items={projects}
-            renderItem={item => (<div key={item._id}>{item.title}</div>)}
-            value={this.state.selectedProject}
-            onChange={e => this.handleTypes('Project', e.target.value)}
-            onSelect={(val, item) => this.handleSelect('Project', val, item)}
+            type="project"
+            selectedValue={projectId}
           />
         </div>
 
@@ -52,23 +61,23 @@ class TaskForm extends Component {
           <div>Task</div>
 
           <Autocomplete
-            getItemValue={item => item.title}
-            shouldItemRender={(item, value) => item.title.toLowerCase().indexOf(value.toLowerCase()) > -1}
-            items={this.state.tasks}
-            renderItem={item => (<div key={item._id}>{item.title}</div>)}
-            value={this.state.selectedTask}
-            onChange={e => this.handleTypes('Task', e.target.value)}
-            onSelect={(val, item) => this.handleSelect('Task', val, item)}
+            handleChange={this.handleSelected}
+            items={tasks}
+            type="task"
+            selectedValue={taskId}
           />
         </div>
 
         <div>
           <div>Comment</div>
 
-          <input
-            id="notes"
-            type="text"
-            ref={(input) => { this.notes = input; }}
+          <TextField
+            id="note"
+            label="Note"
+            value={this.state.note}
+            onChange={this.handleInputChange('note')}
+            fullWidth
+            margin="normal"
           />
         </div>
 
