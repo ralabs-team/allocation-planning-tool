@@ -73,78 +73,91 @@ class AllocationForm extends Component {
     const { tasks, taskId, projectId } = this.state;
 
     return (
-      <div className="modal-content">
-        <div>
-          <div>Project</div>
+      <div>
+        <div className="modal-content">
+          <div className="modal-content__allocation-info">
+            <div className="field-wrapper">
+              <div>Project</div>
 
-          <Autocomplete
-            handleChange={this.handleSelected}
-            items={projects}
-            type="project"
-            selectedValue={projectId}
-          />
+              <Autocomplete
+                handleChange={this.handleSelected}
+                items={projects}
+                type="project"
+                selectedValue={projectId}
+              />
+            </div>
+
+            <div className="field-wrapper">
+              <div>Task</div>
+
+              <Autocomplete
+                handleChange={this.handleSelected}
+                items={tasks}
+                type="task"
+                selectedValue={taskId}
+              />
+            </div>
+
+            <div className="field-wrapper">
+              <div>Comment</div>
+
+              <TextField
+                id="note"
+                label="Note"
+                value={this.state.note}
+                onChange={this.handleInputChange('notes')}
+                fullWidth
+                margin="normal"
+              />
+            </div>
+          </div>
+
+          <div className="modal-content__allocation-time">
+            <div className="day-picker-wrapper">
+              <h6 className="day-picker-label">From:</h6>
+
+              <DayPickerInput
+                formatDate={formatDate}
+                parseDate={parseDate}
+                format="DD.MM.YYYY"
+                placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
+                onDayChange={day => this.handleDayChange('start', day)}
+              />
+            </div>
+
+            <div className="day-picker-wrapper">
+              <h6 className="day-picker-label">To:</h6>
+
+              <DayPickerInput
+                className="date-picker"
+                formatDate={formatDate}
+                parseDate={parseDate}
+                format="DD.MM.YYYY"
+                placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
+                onDayChange={day => this.handleDayChange('finish', day)}
+              />
+            </div>
+          </div>
         </div>
 
-        <div>
-          <div>Task</div>
+        <div className="modal-action-block">
+          <div className="button-wrapper">
+            <Button
+              className="create-button"
+              onClick={this.createAllocation}
+            >
+              Create
+            </Button>
+          </div>
 
-          <Autocomplete
-            handleChange={this.handleSelected}
-            items={tasks}
-            type="task"
-            selectedValue={taskId}
-          />
-        </div>
-
-        <div>
-          <div>Comment</div>
-
-          <TextField
-            id="note"
-            label="Note"
-            value={this.state.note}
-            onChange={this.handleInputChange('notes')}
-            fullWidth
-            margin="normal"
-          />
-        </div>
-
-        <div>
-          <div>from</div>
-
-          <DayPickerInput
-            formatDate={formatDate}
-            parseDate={parseDate}
-            format="DD.MM.YYYY"
-            placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
-            onDayChange={day => this.handleDayChange('start', day)}
-          />
-
-          <div>To</div>
-
-          <DayPickerInput
-            formatDate={formatDate}
-            parseDate={parseDate}
-            format="DD.MM.YYYY"
-            placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
-            onDayChange={day => this.handleDayChange('finish', day)}
-          />
-        </div>
-
-        <div>
-          <Button
-            variant="contained"
-            onClick={this.createAllocation}
-          >
-            Create
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={this.props.hideModal}
-          >
-            Cancel
-          </Button>
+          <div className="button-wrapper">
+            <Button
+              className="cancel-button"
+              onClick={this.props.hideModal}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </div>
     );

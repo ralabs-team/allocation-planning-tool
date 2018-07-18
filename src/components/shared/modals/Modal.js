@@ -22,6 +22,11 @@ const Modals = (props) => {
     }
   };
 
+  const classes = {
+    root: 'modal-wrapper',
+    paperWidthSm: 'modal-body',
+  };
+
   return (
     <div>
       <Dialog
@@ -29,6 +34,7 @@ const Modals = (props) => {
         onClose={props.hideModal}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        classes={classes}
       >
         <DialogContent>
           {renderModalContent()}
