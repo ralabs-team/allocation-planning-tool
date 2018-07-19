@@ -15,12 +15,23 @@ import 'react-day-picker/lib/style.css';
 import Autocomplete from '../autocomplete/Autocomplete';
 
 class AllocationForm extends Component {
-  state = {
-    projectId: null,
-    tasks: [],
-    taskId: null,
-    notes: '',
-    hoursPerDay: 8,
+  constructor(props) {
+    super(props);
+
+    const defaultProject = this.props.projects[0];
+    const { time } = this.props.modalsData.data;
+
+    this.state = {
+      projectId: this.props.projects[0]._id,
+      project: defaultProject,
+      tasks: defaultProject.tasks,
+      task: null,
+      taskId: null,
+      notes: '',
+      startTime: time,
+      endTime: time,
+      hoursPerDay: 8,
+    };
   }
 
   handleSelected = (type, id) => {
@@ -39,7 +50,7 @@ class AllocationForm extends Component {
   }
 
   handleDayChange = (type, day) => {
-    this.setState({ [`${type}Day`]: day });
+    this.setState({ [`${type}Time`]: day });
   }
 
   handleInputChange = (event) => {
@@ -56,22 +67,22 @@ class AllocationForm extends Component {
 
   createAllocation = () => {
     const { employee } = this.props.modalsData.data;
-    const { _id: taskId, title: taskTitle } = this.state.task;
+    const { _id: taskId, title: taskTitle } = this.state.task || {};
     const { _id: projectId, title: projectTitle } = this.state.project;
     const {
-      startDay, finishDay, notes, hoursPerDay,
+      startTime, endTime, notes, hoursPerDay,
     } = this.state;
 
     const allocation = {
       _id: Math.random().toString(),
       userId: employee._id,
-      taskId,
-      taskTitle,
+      taskId: taskId || '',
+      taskTitle: taskTitle || '',
       projectId,
       projectTitle,
       notes,
-      startTime: moment(startDay),
-      endTime: moment(finishDay),
+      startTime: moment(startTime).hour(0),
+      endTime: moment(endTime).hours(23).minute(59),
       hoursPerDay,
       createAt: new Date(),
       createBy: '1',
@@ -83,7 +94,9 @@ class AllocationForm extends Component {
 
   render() {
     const { projects, modalsData } = this.props;
-    const { tasks, taskId, projectId } = this.state;
+    const {
+      tasks, taskId, projectId, startTime, endTime,
+    } = this.state;
     const {
       firstName, lastName, position, avatar,
     } = modalsData.data.employee;
@@ -152,7 +165,7 @@ class AllocationForm extends Component {
                 formatDate={formatDate}
                 parseDate={parseDate}
                 format="DD.MM.YYYY"
-                placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
+                placeholder={`${formatDate(new Date(startTime), 'L', 'uk')}`}
                 onDayChange={day => this.handleDayChange('start', day)}
               />
             </div>
@@ -165,8 +178,8 @@ class AllocationForm extends Component {
                 formatDate={formatDate}
                 parseDate={parseDate}
                 format="DD.MM.YYYY"
-                placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
-                onDayChange={day => this.handleDayChange('finish', day)}
+                placeholder={`${formatDate(new Date(endTime), 'L', 'uk')}`}
+                onDayChange={day => this.handleDayChange('end', day)}
               />
             </div>
 
