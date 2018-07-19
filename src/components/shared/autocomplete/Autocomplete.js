@@ -5,8 +5,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import SelectWrapper from './SelectWrapper';
+
+import './autocomplete.css';
 
 const ITEM_HEIGHT = 48;
 
@@ -121,21 +125,43 @@ const styles = theme => ({
 const IntegrationReactSelect = (props) => {
   const {
     classes, handleChange, items, type, selectedValue,
+    valueProperty, labelProperty, inputLabel, required,
   } = props;
 
   const suggest = items.map(suggestion => ({
-    value: suggestion._id,
-    label: suggestion.title,
+    value: suggestion[valueProperty],
+    label: suggestion[labelProperty],
   }));
 
+  const renderValidateText = () => {
+    if (required && !selectedValue) {
+      return (
+        <FormHelperText
+          classes={{ root: 'autocomplete__helper-text' }}
+        >
+          {`${inputLabel} is required`}
+        </FormHelperText>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <div className={classes.root}>
+    <div className="autocomplete">
+      <InputLabel
+        classes={{ root: 'autocomplete__label' }}
+        htmlFor="react-select-single"
+      >
+        {inputLabel}
+      </InputLabel>
+
       <Input
         fullWidth
         inputComponent={SelectWrapper}
         value={selectedValue}
         onChange={value => handleChange(type, value)}
-        placeholder={type}
+        placeholder={`Search a ${type}`}
         id="react-select-single"
         inputProps={{
           classes,
@@ -145,6 +171,8 @@ const IntegrationReactSelect = (props) => {
           options: suggest,
         }}
       />
+
+      {renderValidateText()}
     </div>
   );
 };

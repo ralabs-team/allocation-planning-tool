@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -22,21 +23,22 @@ class AllocationForm extends Component {
     const { time } = this.props.modalsData.data;
 
     this.state = {
+      projects: this.props.projects,
       projectId: this.props.projects[0]._id,
       project: defaultProject,
       tasks: defaultProject.tasks,
       task: null,
       taskId: null,
       notes: '',
-      startTime: time,
-      endTime: time,
+      startTime: new Date(time),
+      endTime: new Date(time),
       hoursPerDay: 8,
     };
   }
 
   handleSelected = (type, id) => {
     let { tasks } = this.state;
-    const value = _.find(this.props.projects, ['_id', id]);
+    const value = _.find(this.state[`${type}s`], ['_id', id]);
 
     if (type === 'project') {
       tasks = value ? value.tasks : this.state.tasks;
@@ -50,7 +52,12 @@ class AllocationForm extends Component {
   }
 
   handleDayChange = (type, day) => {
-    this.setState({ [`${type}Time`]: day });
+    const invalidDate = (type === 'start' && day > this.state.endTime) || (type === 'end' && day < this.state.startTime);
+
+    this.setState({
+      [`${type}Time`]: day,
+      invalidDate,
+    });
   }
 
   handleInputChange = (event) => {
@@ -92,10 +99,24 @@ class AllocationForm extends Component {
     this.props.hideModal();
   }
 
+  renderValidateText = () => {
+    if (this.state.invalidDate) {
+      return (
+        <FormHelperText
+          classes={{ root: 'picker-helper-text' }}
+        >
+          The second date must be greater than the first one
+        </FormHelperText>
+      );
+    }
+
+    return null;
+  };
+
   render() {
-    const { projects, modalsData } = this.props;
+    const { modalsData } = this.props;
     const {
-      tasks, taskId, projectId, startTime, endTime,
+      projects, tasks, taskId, projectId, startTime, endTime, note, hoursPerDay, invalidDate,
     } = this.state;
     const {
       firstName, lastName, position, avatar,
@@ -122,24 +143,27 @@ class AllocationForm extends Component {
             </div>
 
             <div className="field-wrapper">
-              <div>Project</div>
-
               <Autocomplete
                 handleChange={this.handleSelected}
                 items={projects}
                 type="project"
                 selectedValue={projectId}
+                valueProperty="_id"
+                labelProperty="title"
+                inputLabel="Project"
+                required
               />
             </div>
 
             <div className="field-wrapper">
-              <div>Task</div>
-
               <Autocomplete
                 handleChange={this.handleSelected}
                 items={tasks}
                 type="task"
                 selectedValue={taskId}
+                valueProperty="_id"
+                labelProperty="title"
+                inputLabel="Task"
               />
             </div>
 
@@ -149,7 +173,7 @@ class AllocationForm extends Component {
               <TextField
                 id="note"
                 label="Note"
-                value={this.state.note}
+                value={note}
                 onChange={this.handleInputChange}
                 fullWidth
                 margin="normal"
@@ -174,13 +198,14 @@ class AllocationForm extends Component {
               <h6 className="picker-label">To:</h6>
 
               <DayPickerInput
-                className="date-picker"
                 formatDate={formatDate}
                 parseDate={parseDate}
                 format="DD.MM.YYYY"
                 placeholder={`${formatDate(new Date(endTime), 'L', 'uk')}`}
                 onDayChange={day => this.handleDayChange('end', day)}
               />
+
+              {this.renderValidateText()}
             </div>
 
             <div className="picker-wrapper">
@@ -195,7 +220,7 @@ class AllocationForm extends Component {
                 min="0"
                 max="12"
                 step="0.5"
-                defaultValue={this.state.hoursPerDay}
+                defaultValue={hoursPerDay}
               />
             </div>
           </div>
@@ -206,6 +231,7 @@ class AllocationForm extends Component {
             <Button
               className="create-button"
               onClick={this.createAllocation}
+              disabled={!projectId || invalidDate}
             >
               Create
             </Button>

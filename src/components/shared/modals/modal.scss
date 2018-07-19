@@ -21,6 +21,10 @@
         padding-left: 0;
         margin-bottom: 10px;
       }
+
+      .field-wrapper {
+        margin-bottom: 20px;
+      }
     }
 
     .modal-content__allocation-time {
@@ -46,6 +50,10 @@
       .DayPickerInput-Overlay {
         left: -30px;
       }
+    }
+
+    .picker-helper-text {
+      color: #e10050;
     }
   }
 
