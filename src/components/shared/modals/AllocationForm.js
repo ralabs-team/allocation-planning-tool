@@ -17,6 +17,8 @@ class AllocationForm extends Component {
     projectId: null,
     tasks: [],
     taskId: null,
+    notes: '',
+    hoursPerDay: 8,
   }
 
   handleSelected = (type, id) => {
@@ -38,17 +40,25 @@ class AllocationForm extends Component {
     this.setState({ [`${type}Day`]: day });
   }
 
-  handleInputChange = name => (event) => {
+  handleInputChange = (event) => {
     this.setState({
-      [name]: event.target.value,
+      notes: event.target.value,
     });
   };
+
+  handleChangeHours = (e) => {
+    this.setState({
+      hoursPerDay: e.target.value,
+    });
+  }
 
   createAllocation = () => {
     const { employee } = this.props.modalsData.data;
     const { _id: taskId, title: taskTitle } = this.state.task;
     const { _id: projectId, title: projectTitle } = this.state.project;
-    const { startDay, finishDay, notes } = this.state;
+    const {
+      startDay, finishDay, notes, hoursPerDay,
+    } = this.state;
 
     const allocation = {
       _id: Math.random().toString(),
@@ -57,9 +67,10 @@ class AllocationForm extends Component {
       taskTitle,
       projectId,
       projectTitle,
+      notes,
       startTime: moment(startDay),
       endTime: moment(finishDay),
-      notes,
+      hoursPerDay,
       createAt: new Date(),
       createBy: '1',
     };
@@ -105,7 +116,7 @@ class AllocationForm extends Component {
                 id="note"
                 label="Note"
                 value={this.state.note}
-                onChange={this.handleInputChange('notes')}
+                onChange={this.handleInputChange}
                 fullWidth
                 margin="normal"
               />
@@ -113,8 +124,8 @@ class AllocationForm extends Component {
           </div>
 
           <div className="modal-content__allocation-time">
-            <div className="day-picker-wrapper">
-              <h6 className="day-picker-label">From:</h6>
+            <div className="picker-wrapper">
+              <h6 className="picker-label">From:</h6>
 
               <DayPickerInput
                 formatDate={formatDate}
@@ -125,8 +136,8 @@ class AllocationForm extends Component {
               />
             </div>
 
-            <div className="day-picker-wrapper">
-              <h6 className="day-picker-label">To:</h6>
+            <div className="picker-wrapper">
+              <h6 className="picker-label">To:</h6>
 
               <DayPickerInput
                 className="date-picker"
@@ -135,6 +146,22 @@ class AllocationForm extends Component {
                 format="DD.MM.YYYY"
                 placeholder={`${formatDate(new Date(), 'L', 'uk')}`}
                 onDayChange={day => this.handleDayChange('finish', day)}
+              />
+            </div>
+
+            <div className="picker-wrapper">
+              <h6 className="picker-label">Hrs/Day:</h6>
+
+              <input
+                id="hours"
+                name="hours"
+                type="number"
+                onChange={this.handleChangeHours}
+                size="2"
+                min="0"
+                max="12"
+                step="0.5"
+                defaultValue={this.state.hoursPerDay}
               />
             </div>
           </div>

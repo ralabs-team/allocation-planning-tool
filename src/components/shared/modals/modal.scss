@@ -26,9 +26,9 @@
     }
   }
 
-  .day-picker-wrapper {
+  .picker-wrapper {
     margin-bottom: 20px;
-    .day-picker-label {
+    .picker-label {
       font-size: 1rem;
       margin-bottom: 10px;
     }
@@ -36,6 +36,12 @@
     input {
       height: 30px;
       font-size: 1rem;
+    }
+
+    .DayPickerInput-OverlayWrapper {
+      .DayPickerInput-Overlay {
+        left: -30px;
+      }
     }
   }
 
@@ -47,11 +53,17 @@
       .create-button {
         background-color: #4caf50;
         color: #ffffff;
+        &:hover {
+          background-color: #207324;
+        }
       }
 
       .cancel-button {
         background-color: #e10050;
         color: #ffffff;
+        &:hover {
+          background-color: #960b0b;
+        }
       }
     }
   }
