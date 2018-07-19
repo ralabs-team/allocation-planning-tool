@@ -17,6 +17,10 @@
       padding: 30px;
       background-color: #ffffff;
       border-right: 1px solid #d8d8d8;
+      .user-card {
+        padding-left: 0;
+        margin-bottom: 10px;
+      }
     }
 
     .modal-content__allocation-time {

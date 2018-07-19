@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -80,13 +82,32 @@ class AllocationForm extends Component {
   }
 
   render() {
-    const { projects } = this.props;
+    const { projects, modalsData } = this.props;
     const { tasks, taskId, projectId } = this.state;
+    const {
+      firstName, lastName, position, avatar,
+    } = modalsData.data.employee;
+    const cardClasses = {
+      root: 'user-card',
+    };
 
     return (
       <div>
         <div className="modal-content">
           <div className="modal-content__allocation-info">
+            <div className="field-wrapper">
+              <CardHeader
+                classes={cardClasses}
+                avatar={
+                  <Avatar src={avatar}>
+                    {!avatar && `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`}
+                  </Avatar>
+                }
+                title={`${firstName} ${lastName}`}
+                subheader={position}
+              />
+            </div>
+
             <div className="field-wrapper">
               <div>Project</div>
 

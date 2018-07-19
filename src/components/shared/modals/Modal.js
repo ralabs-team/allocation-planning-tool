@@ -11,7 +11,7 @@ import { hideModal, addAllocation } from '../../../actions';
 import './modal.css';
 
 const Modals = (props) => {
-  const { isOpen, type } = props.modalsData;
+  const { isOpen, type, data } = props.modalsData;
 
   const renderModalContent = () => {
     switch (type) {
@@ -37,7 +37,7 @@ const Modals = (props) => {
         classes={classes}
       >
         <DialogContent>
-          {renderModalContent()}
+          {data && renderModalContent()}
         </DialogContent>
       </Dialog>
     </div>
