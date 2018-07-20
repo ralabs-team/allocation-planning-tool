@@ -42,6 +42,11 @@
     "eslint-plugin-react": "^7.9.1",
     "git-scripts": "^0.2.1"
   },
+  "engineStrict": true,
+  "engines": {
+    "node": ">=10.4.1 <11",
+    "npm": ">=6.1.0"
+  },
   "git": {
     "scripts": {
       "pre-commit": "npm run lint"
