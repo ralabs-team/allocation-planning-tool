@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -51,6 +52,10 @@ const SelectWrapper = (props) => {
       {...other}
     />
   );
+};
+
+SelectWrapper.propTypes = {
+  classes: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 export default SelectWrapper;

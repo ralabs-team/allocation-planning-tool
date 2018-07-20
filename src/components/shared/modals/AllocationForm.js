@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,6 +16,13 @@ import 'react-day-picker/lib/style.css';
 import Autocomplete from '../autocomplete/Autocomplete';
 
 class AllocationForm extends Component {
+  static propTypes = {
+    projects: PropTypes.array.isRequired, // eslint-disable-line
+    modalsData: PropTypes.object.isRequired, // eslint-disable-line
+    addAllocation: PropTypes.func.isRequired,
+    hideModal: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 

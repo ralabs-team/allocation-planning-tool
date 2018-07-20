@@ -25,6 +25,7 @@ const LayoutRoute = (props) => {
 
 LayoutRoute.propTypes = {
   component: PropTypes.func.isRequired, // eslint-disable-line
+  computedMatch: PropTypes.object, // eslint-disable-line
 };
 
 export default LayoutRoute;

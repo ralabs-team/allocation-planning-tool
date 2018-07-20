@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Dialog from '@material-ui/core/Dialog';
@@ -42,6 +43,11 @@ const Modals = (props) => {
       </Dialog>
     </div>
   );
+};
+
+Modals.propTypes = {
+  modalsData: PropTypes.object.isRequired, // eslint-disable-line
+  hideModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

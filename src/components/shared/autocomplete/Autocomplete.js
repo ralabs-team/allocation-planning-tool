@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -177,8 +175,21 @@ const IntegrationReactSelect = (props) => {
   );
 };
 
+IntegrationReactSelect.defaultProps = {
+  required: false,
+  selectedValue: '',
+};
+
 IntegrationReactSelect.propTypes = {
   classes: PropTypes.object.isRequired, //eslint-disable-line
+  handleChange: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired, //eslint-disable-line
+  type: PropTypes.string.isRequired,
+  selectedValue: PropTypes.string,
+  valueProperty: PropTypes.string.isRequired,
+  labelProperty: PropTypes.string.isRequired,
+  inputLabel: PropTypes.string.isRequired,
+  required: PropTypes.bool,
 };
 
 export default withStyles(styles)(IntegrationReactSelect);

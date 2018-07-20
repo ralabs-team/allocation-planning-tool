@@ -14,6 +14,8 @@ class DashboardPage extends Component {
   static propTypes = {
     getUsers: PropTypes.func.isRequired,
     getSchedulers: PropTypes.func.isRequired,
+    getProjects: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
     schedulers: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
   };

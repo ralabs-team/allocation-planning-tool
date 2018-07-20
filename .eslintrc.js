@@ -20,7 +20,7 @@ module.exports = {
         "no-alert": 0,
         "react/jsx-uses-react": 1,
         "react/jsx-uses-vars": 1,
-        "react/prop-types": 0,
+        "react/prop-types": 1,
         "react/jsx-max-props-per-line": 1,
         "react/jsx-no-bind": 1,
         "jsx-a11y/anchor-is-valid": ["error", {}],

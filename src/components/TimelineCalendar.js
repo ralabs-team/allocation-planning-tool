@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
 // make sure you include the timeline stylesheet or the timeline will not be styled
@@ -93,6 +93,12 @@ const TimelineCalendar = (props) => {
       onCanvasDoubleClick={onCanvasDoubleClick}
     />
   );
+};
+
+TimelineCalendar.propTypes = {
+  employees: PropTypes.array.isRequired, // eslint-disable-line
+  scheduler: PropTypes.array.isRequired, // eslint-disable-line
+  openModal: PropTypes.func.isRequired,
 };
 
 export default TimelineCalendar;
