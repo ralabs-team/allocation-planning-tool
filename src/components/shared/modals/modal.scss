@@ -1,0 +1,82 @@
+.modal-wrapper {
+  .modal-body {
+    max-width: 800px;
+    background-color: #e8e8e8;
+  }
+
+  .modal-content {
+    display: flex;
+    justify-content: space-between;
+    min-width: 320px;
+    width: 720px;
+    min-height: 450px;
+    margin-bottom: 20px;
+    border: 1px solid #d8d8d8;
+    .modal-content__allocation-info {
+      width: 460px;
+      padding: 30px;
+      background-color: #ffffff;
+      border-right: 1px solid #d8d8d8;
+      .user-card {
+        padding-left: 0;
+        margin-bottom: 10px;
+      }
+
+      .field-wrapper {
+        margin-bottom: 20px;
+      }
+    }
+
+    .modal-content__allocation-time {
+      width: 260px;
+      padding: 30px;
+      background-color: #f3f7fa;
+    }
+  }
+
+  .picker-wrapper {
+    margin-bottom: 20px;
+    .picker-label {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    input {
+      height: 30px;
+      font-size: 1rem;
+    }
+
+    .DayPickerInput-OverlayWrapper {
+      .DayPickerInput-Overlay {
+        left: -30px;
+      }
+    }
+
+    .picker-helper-text {
+      color: #e10050;
+    }
+  }
+
+  .modal-action-block {
+    display: flex;
+    justify-content: flex-end;
+    .button-wrapper {
+      margin-left: 20px;
+      .create-button {
+        background-color: #4caf50;
+        color: #ffffff;
+        &:hover {
+          background-color: #207324;
+        }
+      }
+
+      .cancel-button {
+        background-color: #e10050;
+        color: #ffffff;
+        &:hover {
+          background-color: #960b0b;
+        }
+      }
+    }
+  }
+}
