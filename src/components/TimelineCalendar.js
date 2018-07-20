@@ -6,14 +6,14 @@ import 'react-calendar-timeline/lib/Timeline.css';
 
 
 const TimelineCalendar = (props) => {
-  const { employees, scheduler } = props;
+  const { employees, allocations } = props;
 
   const groups = employees.map(item => ({
     id: item._id,
     title: `${item.firstName} ${item.lastName}`,
   }));
 
-  const items = scheduler.map(item => ({
+  const items = allocations.map(item => ({
     ...item,
     id: item._id,
     group: item.userId,
@@ -25,7 +25,7 @@ const TimelineCalendar = (props) => {
   const onItemMove = (itemId, dragTime, newGroupIndex) => {
     const user = props.employees[newGroupIndex];
 
-    const newScheduler = props.scheduler.map((allocation) => {
+    const newAllocations = allocations.map((allocation) => {
       if (allocation._id === itemId) {
         return ({
           ...allocation,
@@ -38,7 +38,7 @@ const TimelineCalendar = (props) => {
       return allocation;
     });
 
-    props.changeAllocation(newScheduler);
+    props.changeAllocations(newAllocations);
   };
 
   const onItemResize = (itemId, time, edge) => {
@@ -102,9 +102,9 @@ const TimelineCalendar = (props) => {
 
 TimelineCalendar.propTypes = {
   employees: PropTypes.array.isRequired, // eslint-disable-line
-  scheduler: PropTypes.array.isRequired, // eslint-disable-line
+  allocations: PropTypes.array.isRequired, // eslint-disable-line
   openModal: PropTypes.func.isRequired,
-  changeAllocation: PropTypes.func.isRequired,
+  changeAllocations: PropTypes.func.isRequired,
 };
 
 export default TimelineCalendar;

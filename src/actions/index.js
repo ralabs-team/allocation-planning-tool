@@ -1,6 +1,6 @@
 import { OPEN_MODAL, HIDE_MODAL, openModal, hideModal } from './modals';
 import { GET_PROJECTS, getProjects } from './projects';
-import { GET_SCHEDULERS, getSchedulers, ADD_ALLOCATION, addAllocation, CHANGE_ALLOCATION, changeAllocation } from './schedulers';
+import { GET_ALLOCATIONS, getAllocations, ADD_ALLOCATION, addAllocation, CHANGE_ALLOCATIONS, changeAllocations } from './allocations';
 import { GET_USERS, getUsers } from './users';
 
 export {
@@ -10,12 +10,12 @@ export {
   hideModal,
   GET_PROJECTS,
   getProjects,
-  GET_SCHEDULERS,
-  getSchedulers,
+  GET_ALLOCATIONS,
+  getAllocations,
   ADD_ALLOCATION,
   addAllocation,
+  CHANGE_ALLOCATIONS,
+  changeAllocations,
   GET_USERS,
   getUsers,
-  CHANGE_ALLOCATION,
-  changeAllocation,
 };

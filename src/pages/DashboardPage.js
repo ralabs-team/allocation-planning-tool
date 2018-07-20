@@ -8,27 +8,27 @@ import PropTypes from 'prop-types';
 import TimelineCalendar from '../components/TimelineCalendar';
 
 // actions
-import { getUsers, getSchedulers, openModal, getProjects, changeAllocation } from '../actions';
+import { getUsers, getAllocations, openModal, getProjects, changeAllocations } from '../actions';
 
 class DashboardPage extends Component {
   static propTypes = {
     getUsers: PropTypes.func.isRequired,
-    getSchedulers: PropTypes.func.isRequired,
+    getAllocations: PropTypes.func.isRequired,
     getProjects: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
-    schedulers: PropTypes.array.isRequired, // eslint-disable-line
+    allocations: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
-    changeAllocation: PropTypes.func.isRequired,
+    changeAllocations: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
     this.props.getUsers();
-    this.props.getSchedulers();
+    this.props.getAllocations();
     this.props.getProjects();
   }
 
   render() {
-    const { users, schedulers } = this.props;
+    const { users, allocations } = this.props;
 
     return (
       <div>
@@ -43,9 +43,9 @@ class DashboardPage extends Component {
             users.length &&
             <TimelineCalendar
               employees={users}
-              scheduler={schedulers}
+              allocations={allocations}
               openModal={this.props.openModal}
-              changeAllocation={this.props.changeAllocation}
+              changeAllocations={this.props.changeAllocations}
             />
           }
         </div>
@@ -55,20 +55,20 @@ class DashboardPage extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { users, schedulers } = state;
+  const { users, allocations } = state;
 
   return ({
     users: users.allUsers,
-    schedulers: schedulers.allSchedulers,
+    allocations: allocations.allAllocations,
   });
 };
 
 const mapDispatchToProps = dispatch => ({
   getUsers: bindActionCreators(getUsers, dispatch),
-  getSchedulers: bindActionCreators(getSchedulers, dispatch),
+  getAllocations: bindActionCreators(getAllocations, dispatch),
   openModal: bindActionCreators(openModal, dispatch),
   getProjects: bindActionCreators(getProjects, dispatch),
-  changeAllocation: bindActionCreators(changeAllocation, dispatch),
+  changeAllocations: bindActionCreators(changeAllocations, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
