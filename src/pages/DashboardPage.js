@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import TimelineCalendar from '../components/TimelineCalendar';
 
 // actions
-import { getUsers, getSchedulers, openModal, getProjects } from '../actions';
+import { getUsers, getSchedulers, openModal, getProjects, changeAllocation } from '../actions';
 
 class DashboardPage extends Component {
   static propTypes = {
@@ -18,6 +18,7 @@ class DashboardPage extends Component {
     openModal: PropTypes.func.isRequired,
     schedulers: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
+    changeAllocation: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -44,6 +45,7 @@ class DashboardPage extends Component {
               employees={users}
               scheduler={schedulers}
               openModal={this.props.openModal}
+              changeAllocation={this.props.changeAllocation}
             />
           }
         </div>
@@ -66,6 +68,7 @@ const mapDispatchToProps = dispatch => ({
   getSchedulers: bindActionCreators(getSchedulers, dispatch),
   openModal: bindActionCreators(openModal, dispatch),
   getProjects: bindActionCreators(getProjects, dispatch),
+  changeAllocation: bindActionCreators(changeAllocation, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
-// make sure you include the timeline stylesheet or the timeline will not be styled
 import 'react-calendar-timeline/lib/Timeline.css';
 
 
@@ -19,14 +18,27 @@ const TimelineCalendar = (props) => {
     id: item._id,
     group: item.userId,
     title: item.taskName,
-    start_time: item.startTime,
-    end_time: item.endTime,
+    start_time: moment(item.startTime),
+    end_time: moment(item.endTime),
   }));
 
   const onItemMove = (itemId, dragTime, newGroupIndex) => {
-    console.log('itemId ', itemId);
-    console.log('dragTime ', dragTime);
-    console.log('newGroupIndex ', newGroupIndex);
+    const user = props.employees[newGroupIndex];
+
+    const newScheduler = props.scheduler.map((allocation) => {
+      if (allocation._id === itemId) {
+        return ({
+          ...allocation,
+          startTime: new Date(dragTime),
+          endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
+          userId: user._id,
+        });
+      }
+
+      return allocation;
+    });
+
+    props.changeAllocation(newScheduler);
   };
 
   const onItemResize = (itemId, time, edge) => {
@@ -92,6 +104,7 @@ TimelineCalendar.propTypes = {
   employees: PropTypes.array.isRequired, // eslint-disable-line
   scheduler: PropTypes.array.isRequired, // eslint-disable-line
   openModal: PropTypes.func.isRequired,
+  changeAllocation: PropTypes.func.isRequired,
 };
 
 export default TimelineCalendar;

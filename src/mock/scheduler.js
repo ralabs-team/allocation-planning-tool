@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 export default [
   {
     _id: '001',
@@ -8,8 +6,8 @@ export default [
     taskTitle: 'Just task',
     projectId: '001',
     projectTitle: 'The best project',
-    startTime: moment().hour(0),
-    endTime: moment().hour(0).add(12, 'days'),
+    startTime: new Date(),
+    endTime: new Date().setDate(new Date().getDate() + 12),
     hoursPerDay: '4.0',
     taskCalDays: 12,
     notes: 'some note',
@@ -23,8 +21,8 @@ export default [
     taskTitle: 'Hard task',
     projectId: '001',
     projectTitle: 'The best project',
-    startTime: moment().hour(0),
-    endTime: moment().hour(0).add(3, 'days'),
+    startTime: new Date(),
+    endTime: new Date().setDate(new Date().getDate() + 3),
     hoursPerDay: '2.0',
     taskCalDays: 3,
     notes: 'High priority',
@@ -38,8 +36,8 @@ export default [
     taskTitle: ' task',
     projectId: '001',
     projectTitle: 'The best project',
-    startTime: moment().hour(0),
-    endTime: moment().hour(0).add(5, 'days'),
+    startTime: new Date(),
+    endTime: new Date().setDate(new Date().getDate() + 5),
     hoursPerDay: '2.0',
     taskCalDays: 3,
     notes: 'High priority',
