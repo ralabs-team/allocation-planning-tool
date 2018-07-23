@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
 import 'react-calendar-timeline/lib/Timeline.css';
-
+import _ from 'lodash';
 
 const TimelineCalendar = (props) => {
   const { employees, allocations } = props;
@@ -64,19 +64,31 @@ const TimelineCalendar = (props) => {
     console.log('time ', time);
   };
 
-  const onItemDoubleClick = (itemId, e, time) => {
-    /** will use for open task details */
-    console.log('itemId ', itemId);
-    console.log('e ', e);
-    console.log('time ', time);
+  const onItemDoubleClick = (itemId) => {
+    const allocation = _.find(allocations, ['_id', itemId]);
+    const employee = _.find(employees, ['_id', allocation.userId]);
+
+    const modalData = {
+      type: 'ALLOCATION',
+      state: 'edit',
+      data: {
+        employee,
+        initialTime: null,
+        allocation,
+      },
+    };
+
+    props.openModal(modalData);
   };
 
   const onCanvasDoubleClick = (group, time) => {
     const modalData = {
       type: 'ALLOCATION',
+      state: 'create',
       data: {
         employee: employees[group - 1],
-        time,
+        initialTime: time,
+        allocation: null,
       },
     };
 

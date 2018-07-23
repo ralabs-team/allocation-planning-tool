@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
 import _ from 'lodash';
 import moment from 'moment';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
@@ -26,83 +25,95 @@ class AllocationForm extends Component {
   constructor(props) {
     super(props);
 
-    const defaultProject = this.props.projects[0];
-    const { time } = this.props.modalsData.data;
+    const { allocation, initialTime, employee } = this.props.modalsData.data;
+    const defaultProject = allocation ? _.find(this.props.projects, ['_id', allocation.projectId]) : this.props.projects[0];
+    let defaultAllocation = allocation;
+
+    if (!defaultAllocation) {
+      defaultAllocation = {
+        _id: Math.random().toString(), // will delete
+        userId: employee._id,
+        projectId: defaultProject._id,
+        projectTitle: defaultProject.title,
+        taskId: null,
+        taskTitle: '',
+        startTime: moment(initialTime).hour(0).toDate(),
+        endTime: moment(initialTime).hours(23).minute(59).toDate(),
+        hoursPerDay: '8',
+        notes: '',
+        createAt: new Date(),
+        createBy: '1',
+      };
+    }
 
     this.state = {
       projects: this.props.projects,
-      projectId: this.props.projects[0]._id,
-      project: defaultProject,
       tasks: defaultProject.tasks,
-      task: null,
-      taskId: null,
-      notes: '',
-      startTime: new Date(time),
-      endTime: new Date(time),
-      hoursPerDay: 8,
+      allocation: defaultAllocation,
+      invalidDate: false,
     };
   }
 
-  handleSelected = (type, id) => {
-    let { tasks } = this.state;
+  handleAutocompleteSelect = (type, id) => {
     const value = _.find(this.state[`${type}s`], ['_id', id]);
+    const title = value ? value.title : null;
+    let { tasks } = this.state;
 
     if (type === 'project') {
       tasks = value ? value.tasks : this.state.tasks;
     }
 
     this.setState({
-      [type]: value,
-      [`${type}Id`]: id,
       tasks,
+      allocation: {
+        ...this.state.allocation,
+        [`${type}Id`]: id,
+        [`${type}Title`]: title,
+      },
     });
   }
 
   handleDayChange = (type, day) => {
-    const invalidDate = (type === 'start' && day > this.state.endTime) || (type === 'end' && day < this.state.startTime);
+    const { allocation } = this.state;
+    const invalidDate = (type === 'start' && day > allocation.endTime) || (type === 'end' && day < allocation.startTime);
+    const date = type === 'start' ? moment(day).hour(0).toDate() : moment(day).hours(23).minute(59).toDate();
 
     this.setState({
-      [`${type}Time`]: day,
       invalidDate,
+      allocation: {
+        ...allocation,
+        [`${type}Time`]: date,
+      },
     });
   }
 
-  handleInputChange = (event) => {
+  handleNoteInputChange = (event) => {
     this.setState({
-      notes: event.target.value,
+      allocation: {
+        ...this.state.allocation,
+        notes: event.target.value,
+      },
     });
   };
 
   handleChangeHours = (e) => {
     this.setState({
-      hoursPerDay: e.target.value,
+      allocation: {
+        ...this.state.allocation,
+        hoursPerDay: e.target.value,
+      },
     });
   }
 
   createAllocation = () => {
-    const { employee } = this.props.modalsData.data;
-    const { _id: taskId, title: taskTitle } = this.state.task || {};
-    const { _id: projectId, title: projectTitle } = this.state.project;
-    const {
-      startTime, endTime, notes, hoursPerDay,
-    } = this.state;
-
-    const allocation = {
-      _id: Math.random().toString(),
-      userId: employee._id,
-      taskId: taskId || '',
-      taskTitle: taskTitle || '',
-      projectId,
-      projectTitle,
-      notes,
-      startTime: moment(startTime).hour(0),
-      endTime: moment(endTime).hours(23).minute(59),
-      hoursPerDay,
+    const { allocation } = this.state;
+    const newAllocation = {
+      ...allocation,
       createAt: new Date(),
       createBy: '1',
     };
 
-    this.props.addAllocation(allocation);
+    this.props.addAllocation(newAllocation);
     this.props.hideModal();
   }
 
@@ -123,7 +134,7 @@ class AllocationForm extends Component {
   render() {
     const { modalsData } = this.props;
     const {
-      projects, tasks, taskId, projectId, startTime, endTime, note, hoursPerDay, invalidDate,
+      allocation, projects, tasks, invalidDate,
     } = this.state;
     const {
       firstName, lastName, position, avatar,
@@ -151,10 +162,10 @@ class AllocationForm extends Component {
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleSelected}
+                handleChange={this.handleAutocompleteSelect}
                 items={projects}
                 type="project"
-                selectedValue={projectId}
+                selectedValue={allocation.projectId}
                 valueProperty="_id"
                 labelProperty="title"
                 inputLabel="Project"
@@ -164,10 +175,10 @@ class AllocationForm extends Component {
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleSelected}
+                handleChange={this.handleAutocompleteSelect}
                 items={tasks}
                 type="task"
-                selectedValue={taskId}
+                selectedValue={allocation.taskId}
                 valueProperty="_id"
                 labelProperty="title"
                 inputLabel="Task"
@@ -178,10 +189,10 @@ class AllocationForm extends Component {
               <div>Comment</div>
 
               <TextField
-                id="note"
-                label="Note"
-                value={note}
-                onChange={this.handleInputChange}
+                id="notes"
+                label="Notes"
+                value={allocation.notes}
+                onChange={this.handleNoteInputChange}
                 fullWidth
                 margin="normal"
               />
@@ -196,7 +207,7 @@ class AllocationForm extends Component {
                 formatDate={formatDate}
                 parseDate={parseDate}
                 format="DD.MM.YYYY"
-                placeholder={`${formatDate(new Date(startTime), 'L', 'uk')}`}
+                placeholder={`${formatDate(new Date(allocation.startTime), 'L', 'uk')}`}
                 onDayChange={day => this.handleDayChange('start', day)}
               />
             </div>
@@ -208,7 +219,7 @@ class AllocationForm extends Component {
                 formatDate={formatDate}
                 parseDate={parseDate}
                 format="DD.MM.YYYY"
-                placeholder={`${formatDate(new Date(endTime), 'L', 'uk')}`}
+                placeholder={`${formatDate(new Date(allocation.endTime), 'L', 'uk')}`}
                 onDayChange={day => this.handleDayChange('end', day)}
               />
 
@@ -227,7 +238,7 @@ class AllocationForm extends Component {
                 min="0"
                 max="12"
                 step="0.5"
-                defaultValue={hoursPerDay}
+                defaultValue={allocation.hoursPerDay}
               />
             </div>
           </div>
@@ -238,7 +249,7 @@ class AllocationForm extends Component {
             <Button
               className="create-button"
               onClick={this.createAllocation}
-              disabled={!projectId || invalidDate}
+              disabled={!allocation.projectId || invalidDate}
             >
               Create
             </Button>
