@@ -42,9 +42,20 @@ const TimelineCalendar = (props) => {
   };
 
   const onItemResize = (itemId, time, edge) => {
-    console.log('itemId ', itemId);
-    console.log('time ', time);
-    console.log('edge ', edge);
+    const newAllocations = allocations.map((allocation) => {
+      if (allocation._id === itemId) {
+        const changedTime = edge === 'right' ? 'startTime' : 'endTime';
+
+        return ({
+          ...allocation,
+          [changedTime]: new Date(time),
+        });
+      }
+
+      return allocation;
+    });
+
+    props.changeAllocations(newAllocations);
   };
 
   const onItemSelect = (itemId, e, time) => {
