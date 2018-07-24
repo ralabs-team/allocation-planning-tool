@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // components
-import TimelineCalendar from '../components/TimelineCalendar';
+import TimelineCalendar from '../components/callendar/TimelineCalendar';
 
 // actions
 import { getUsers, getAllocations, openModal, getProjects, changeAllocations } from '../actions';

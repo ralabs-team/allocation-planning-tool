@@ -29,24 +29,20 @@ class AllocationForm extends Component {
 
     const { allocation, initialTime, employee } = this.props.modalsData.data;
     const defaultProject = allocation ? _.find(this.props.projects, ['_id', allocation.projectId]) : this.props.projects[0];
-    let defaultAllocation = allocation;
-
-    if (!defaultAllocation) {
-      defaultAllocation = {
-        _id: Math.random().toString(), // will delete
-        userId: employee._id,
-        projectId: defaultProject._id,
-        projectTitle: defaultProject.title,
-        taskId: null,
-        taskTitle: '',
-        startTime: moment(initialTime).hour(0).toDate(),
-        endTime: moment(initialTime).hours(23).minute(59).toDate(),
-        hoursPerDay: '8',
-        notes: '',
-        createAt: new Date(),
-        createBy: '1',
-      };
-    }
+    const defaultAllocation = allocation || {
+      _id: Math.random().toString(), // will delete
+      userId: employee._id,
+      projectId: defaultProject._id,
+      projectTitle: defaultProject.title,
+      taskId: null,
+      taskTitle: '',
+      startTime: moment(initialTime).hour(0).toDate(),
+      endTime: moment(initialTime).hours(23).minute(59).toDate(),
+      hoursPerDay: '8',
+      notes: '',
+      createAt: new Date(),
+      createBy: '1',
+    };
 
     this.state = {
       projects: this.props.projects,
