@@ -12,8 +12,8 @@ import './autocomplete.css';
 
 const IntegrationReactSelect = (props) => {
   const {
-    classes, handleChange, items, type, selectedValue,
-    valueProperty, labelProperty, inputLabel, required,
+    classes, handleChange, items, type, selectedValue, valueProperty,
+    labelProperty, inputLabel, required, placeholder,
   } = props;
 
   const suggest = items.map(suggestion => ({
@@ -37,21 +37,13 @@ const IntegrationReactSelect = (props) => {
 
   return (
     <div className="autocomplete">
-      <InputLabel
-        classes={{ root: 'autocomplete__label' }}
-        htmlFor="react-select-single"
-      >
-        {inputLabel}
-      </InputLabel>
-
       {props.multiple ?
         <TextField
           fullWidth
           value={selectedValue}
           onChange={value => handleChange(type, value)}
-          placeholder="Select multiple countries"
+          placeholder={placeholder}
           name="react-select-chip-label"
-          label="With label"
           InputLabelProps={{
             shrink: true,
           }}
@@ -68,21 +60,32 @@ const IntegrationReactSelect = (props) => {
           }}
         />
         :
-        <Input
-          fullWidth
-          inputComponent={SelectWrapper}
-          value={selectedValue}
-          onChange={value => handleChange(type, value)}
-          placeholder={`Search a ${type}`}
-          id="react-select-single"
-          inputProps={{
-            classes,
-            name: 'react-select-single',
-            instanceId: 'react-select-single',
-            simpleValue: true,
-            options: suggest,
-          }}
-        />
+        [
+          <InputLabel
+            key="label"
+            classes={{ root: 'autocomplete__label' }}
+            htmlFor="react-select-single"
+          >
+            {inputLabel}
+          </InputLabel>,
+
+          <Input
+            key="input"
+            fullWidth
+            inputComponent={SelectWrapper}
+            value={selectedValue}
+            onChange={value => handleChange(type, value)}
+            placeholder={placeholder || `Search a ${type}`}
+            id="react-select-single"
+            inputProps={{
+              classes,
+              name: 'react-select-single',
+              instanceId: 'react-select-single',
+              simpleValue: true,
+              options: suggest,
+            }}
+          />,
+        ]
       }
 
       {renderValidateText()}
@@ -94,6 +97,7 @@ IntegrationReactSelect.defaultProps = {
   required: false,
   selectedValue: '',
   multiple: false,
+  placeholder: '',
 };
 
 IntegrationReactSelect.propTypes = {
@@ -105,6 +109,7 @@ IntegrationReactSelect.propTypes = {
   valueProperty: PropTypes.string.isRequired,
   labelProperty: PropTypes.string.isRequired,
   inputLabel: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   required: PropTypes.bool,
   multiple: PropTypes.bool,
 };

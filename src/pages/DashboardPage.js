@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -32,23 +31,15 @@ class DashboardPage extends Component {
 
     return (
       <div>
-        <h1>Dashboard Page</h1>
-
-        <div>
-          <Link to="/">Main Page</Link>
-        </div>
-
-        <div className="calendar">
-          {
-            users.length &&
-            <TimelineCalendar
-              employees={users}
-              allocations={allocations}
-              openModal={this.props.openModal}
-              changeAllocations={this.props.changeAllocations}
-            />
-          }
-        </div>
+        {
+          users.length &&
+          <TimelineCalendar
+            employees={users}
+            allocations={allocations}
+            openModal={this.props.openModal}
+            changeAllocations={this.props.changeAllocations}
+          />
+        }
       </div>
     );
   }

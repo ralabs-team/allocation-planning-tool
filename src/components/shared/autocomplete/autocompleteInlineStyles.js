@@ -76,7 +76,7 @@ const styles = theme => ({
       left: 0,
       top: `calc(100% + ${theme.spacing.unit}px)`,
       width: '100%',
-      zIndex: 2,
+      zIndex: 1000,
       maxHeight: ITEM_HEIGHT * 4.5,
     },
     '.Select.is-focused:not(.is-open) > .Select-control': {
