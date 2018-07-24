@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 // components
 import AllocationForm from './AllocationForm';
 // actions
-import { hideModal, addAllocation } from '../../../actions';
+import { hideModal, addAllocation, changeAllocations } from '../../../actions';
 // styles
 import './modal.css';
 
@@ -53,11 +53,13 @@ Modals.propTypes = {
 const mapStateToProps = state => ({
   modalsData: state.modals,
   projects: state.projects.allProjects,
+  allocations: state.allocations.allAllocations,
 });
 
 const mapDispatchToProps = dispatch => ({
   hideModal: bindActionCreators(hideModal, dispatch),
   addAllocation: bindActionCreators(addAllocation, dispatch),
+  changeAllocations: bindActionCreators(changeAllocations, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modals);

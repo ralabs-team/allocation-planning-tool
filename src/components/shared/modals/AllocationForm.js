@@ -18,8 +18,10 @@ class AllocationForm extends Component {
   static propTypes = {
     projects: PropTypes.array.isRequired, // eslint-disable-line
     modalsData: PropTypes.object.isRequired, // eslint-disable-line
+    allocations: PropTypes.array.isRequired, // eslint-disable-line
     addAllocation: PropTypes.func.isRequired,
     hideModal: PropTypes.func.isRequired,
+    changeAllocations: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -105,15 +107,32 @@ class AllocationForm extends Component {
     });
   }
 
-  createAllocation = () => {
+  handleAllocation = () => {
     const { allocation } = this.state;
-    const newAllocation = {
-      ...allocation,
-      createAt: new Date(),
-      createBy: '1',
-    };
 
-    this.props.addAllocation(newAllocation);
+    if (this.props.modalsData.mode === 'create') {
+      const newAllocation = {
+        ...allocation,
+        createAt: new Date(),
+        createBy: '1',
+      };
+
+      this.props.addAllocation(newAllocation);
+    } else {
+      const updatedAllocation = {
+        ...allocation,
+        updateAt: new Date(),
+        updateBy: '1',
+      };
+
+      const allocations = this.props.allocations.map((item) => {
+        if (item._id === allocation._id) return updatedAllocation;
+
+        return item;
+      });
+
+      this.props.changeAllocations(allocations);
+    }
     this.props.hideModal();
   }
 
@@ -248,10 +267,10 @@ class AllocationForm extends Component {
           <div className="button-wrapper">
             <Button
               className="create-button"
-              onClick={this.createAllocation}
+              onClick={this.handleAllocation}
               disabled={!allocation.projectId || invalidDate}
             >
-              Create
+              {modalsData.mode === 'create' ? 'Create' : 'Edit'}
             </Button>
           </div>
 

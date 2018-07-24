@@ -70,7 +70,7 @@ const TimelineCalendar = (props) => {
 
     const modalData = {
       type: 'ALLOCATION',
-      state: 'edit',
+      mode: 'edit',
       data: {
         employee,
         initialTime: null,
@@ -84,7 +84,7 @@ const TimelineCalendar = (props) => {
   const onCanvasDoubleClick = (group, time) => {
     const modalData = {
       type: 'ALLOCATION',
-      state: 'create',
+      mode: 'create',
       data: {
         employee: employees[group - 1],
         initialTime: time,
