@@ -12,13 +12,15 @@ import 'react-select/dist/react-select.css';
 import SelectOptions from './SelectOptions';
 
 const SelectWrapper = (props) => {
-  const { classes, ...other } = props;
+  const { classes, value: valueStringified, ...other } = props;
 
   const renderArrow = (arrowProps) => {
     const { isOpen } = arrowProps;
 
     return isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
   };
+
+  const selectedValue = JSON.parse(valueStringified);
 
   return (
     <Select
@@ -49,6 +51,7 @@ const SelectWrapper = (props) => {
 
         return <div className="Select-value">{children}</div>;
       }}
+      value={selectedValue}
       {...other}
     />
   );
@@ -56,6 +59,7 @@ const SelectWrapper = (props) => {
 
 SelectWrapper.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line
+  value: PropTypes.string.isRequired,
 };
 
 export default SelectWrapper;

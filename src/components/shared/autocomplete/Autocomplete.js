@@ -19,6 +19,7 @@ const IntegrationReactSelect = (props) => {
   const suggest = items.map(suggestion => ({
     value: suggestion[valueProperty],
     label: suggestion[labelProperty],
+    type: suggestion.type,
   }));
 
   const renderValidateText = () => {
@@ -35,13 +36,16 @@ const IntegrationReactSelect = (props) => {
     return null;
   };
 
+  /** TextField element expects value like string, number or array of strings */
+  const valueStringified = JSON.stringify(selectedValue);
+
   return (
     <div className="autocomplete">
       {props.multiple ?
         <TextField
           fullWidth
-          value={selectedValue}
-          onChange={value => handleChange(type, value)}
+          value={valueStringified}
+          onChange={value => handleChange(value, type)}
           placeholder={placeholder}
           name="react-select-chip-label"
           InputLabelProps={{
@@ -54,7 +58,6 @@ const IntegrationReactSelect = (props) => {
               multi: true,
               instanceId: 'react-select-chip-label',
               id: 'react-select-chip-label',
-              simpleValue: true,
               options: suggest,
             },
           }}
@@ -95,7 +98,6 @@ const IntegrationReactSelect = (props) => {
 
 IntegrationReactSelect.defaultProps = {
   required: false,
-  selectedValue: '',
   multiple: false,
   placeholder: '',
 };
@@ -105,7 +107,7 @@ IntegrationReactSelect.propTypes = {
   handleChange: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired, //eslint-disable-line
   type: PropTypes.string.isRequired,
-  selectedValue: PropTypes.string,
+  selectedValue: PropTypes.array, //eslint-disable-line
   valueProperty: PropTypes.string.isRequired,
   labelProperty: PropTypes.string.isRequired,
   inputLabel: PropTypes.string.isRequired,

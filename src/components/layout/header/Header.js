@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import SearchPanel from './SearchPanel';
+import { setSearch } from '../../../actions';
+
 import './header.css';
 
 const Header = props => (
@@ -23,10 +25,11 @@ const Header = props => (
 const mapStateToProps = state => ({
   projects: state.projects.allProjects,
   employees: state.users.allUsers,
+  searchData: state.search.searchData,
 });
 
 const mapDispatchToProps = dispatch => ({
-
+  setSearch: bindActionCreators(setSearch, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
