@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Autocomplete from '../../shared/autocomplete/Autocomplete';
 
 const SearchPanel = (props) => {
-  const handleAutocompleteSelect = (searchValues) => {
+  const onAutocompleteSelect = (searchValues) => {
     const searchData = searchValues.reduce((tally, item) => {
       const { value, type } = item;
 
@@ -21,14 +21,14 @@ const SearchPanel = (props) => {
   };
 
   const employees = props.employees.map(item => ({
-    _id: item._id,
-    title: `${item.firstName} ${item.lastName}`,
+    value: item._id,
+    label: `${item.firstName} ${item.lastName}`,
     type: 'employees',
   }));
 
   const projects = props.projects.map(item => ({
-    _id: item._id,
-    title: item.title,
+    value: item._id,
+    label: item.title,
     type: 'projects',
   }));
   const suggested = [...employees, ...projects];
@@ -36,14 +36,11 @@ const SearchPanel = (props) => {
   return (
     <div className="search-panel">
       <Autocomplete
-        handleChange={handleAutocompleteSelect}
-        items={suggested}
-        type="peaple and project"
-        selectedValue={props.searchData.searchValues}
-        valueProperty="_id"
-        labelProperty="title"
-        inputLabel="Search"
-        placeholder="Search"
+        value={props.searchData.searchValues}
+        options={suggested}
+        onChange={onAutocompleteSelect}
+        label="Search"
+        placeholder="Peaple and project"
         multiple
       />
     </div>

@@ -12,23 +12,17 @@ import './autocomplete.css';
 
 const IntegrationReactSelect = (props) => {
   const {
-    classes, handleChange, items, type, selectedValue, valueProperty,
-    labelProperty, inputLabel, required, placeholder,
+    classes, value, options, onChange, label, type,
+    placeholder, required, multiple,
   } = props;
 
-  const suggest = items.map(suggestion => ({
-    value: suggestion[valueProperty],
-    label: suggestion[labelProperty],
-    type: suggestion.type,
-  }));
-
   const renderValidateText = () => {
-    if (required && !selectedValue) {
+    if (required && !value) {
       return (
         <FormHelperText
           classes={{ root: 'autocomplete__helper-text' }}
         >
-          {`${inputLabel} is required`}
+          {`${label} is required`}
         </FormHelperText>
       );
     }
@@ -37,15 +31,15 @@ const IntegrationReactSelect = (props) => {
   };
 
   /** TextField element expects value like string, number or array of strings */
-  const valueStringified = JSON.stringify(selectedValue);
+  const valueStringified = JSON.stringify(value);
 
   return (
     <div className="autocomplete">
-      {props.multiple ?
+      {multiple ?
         <TextField
           fullWidth
           value={valueStringified}
-          onChange={value => handleChange(value, type)}
+          onChange={newValue => onChange(newValue, type)}
           placeholder={placeholder}
           name="react-select-chip-label"
           InputLabelProps={{
@@ -58,7 +52,7 @@ const IntegrationReactSelect = (props) => {
               multi: true,
               instanceId: 'react-select-chip-label',
               id: 'react-select-chip-label',
-              options: suggest,
+              options,
             },
           }}
         />
@@ -69,23 +63,23 @@ const IntegrationReactSelect = (props) => {
             classes={{ root: 'autocomplete__label' }}
             htmlFor="react-select-single"
           >
-            {inputLabel}
+            {label}
           </InputLabel>,
 
           <Input
             key="input"
             fullWidth
             inputComponent={SelectWrapper}
-            value={selectedValue}
-            onChange={value => handleChange(type, value)}
-            placeholder={placeholder || `Search a ${type}`}
+            value={value}
+            onChange={newValue => onChange(newValue, type)}
+            placeholder={placeholder}
             id="react-select-single"
             inputProps={{
               classes,
               name: 'react-select-single',
               instanceId: 'react-select-single',
               simpleValue: true,
-              options: suggest,
+              options,
             }}
           />,
         ]
@@ -100,20 +94,24 @@ IntegrationReactSelect.defaultProps = {
   required: false,
   multiple: false,
   placeholder: '',
+  value: '',
+  type: '',
 };
 
 IntegrationReactSelect.propTypes = {
-  classes: PropTypes.object.isRequired, //eslint-disable-line
-  handleChange: PropTypes.func.isRequired,
-  items: PropTypes.array.isRequired, //eslint-disable-line
-  type: PropTypes.string.isRequired,
-  selectedValue: PropTypes.array, //eslint-disable-line
-  valueProperty: PropTypes.string.isRequired,
-  labelProperty: PropTypes.string.isRequired,
-  inputLabel: PropTypes.string.isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.object),
+  ]),
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  required: PropTypes.bool,
+  type: PropTypes.string,
   multiple: PropTypes.bool,
+  required: PropTypes.bool,
 };
 
 export default withStyles(autocompleteInlineStyles)(IntegrationReactSelect);

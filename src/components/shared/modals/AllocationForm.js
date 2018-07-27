@@ -52,23 +52,32 @@ class AllocationForm extends Component {
     };
   }
 
-  handleAutocompleteSelect = (type, id) => {
+  onAutocompleteSelect = (id, type) => {
     const value = _.find(this.state[`${type}s`], ['_id', id]);
     const title = value ? value.title : null;
-    let { tasks } = this.state;
 
     if (type === 'project') {
-      tasks = value ? value.tasks : this.state.tasks;
-    }
+      const tasks = value ? value.tasks : this.state.tasks;
 
-    this.setState({
-      tasks,
-      allocation: {
-        ...this.state.allocation,
-        [`${type}Id`]: id,
-        [`${type}Title`]: title,
-      },
-    });
+      this.setState({
+        tasks,
+        allocation: {
+          ...this.state.allocation,
+          projectId: id,
+          projectTitle: title,
+          taskId: null,
+          taskTitle: '',
+        },
+      });
+    } else {
+      this.setState({
+        allocation: {
+          ...this.state.allocation,
+          [`${type}Id`]: id,
+          [`${type}Title`]: title,
+        },
+      });
+    }
   }
 
   handleDayChange = (type, day) => {
@@ -148,9 +157,17 @@ class AllocationForm extends Component {
 
   render() {
     const { modalsData } = this.props;
-    const {
-      allocation, projects, tasks, invalidDate,
-    } = this.state;
+    const { allocation, invalidDate } = this.state;
+    const projects = this.props.projects.map(item => ({
+      value: item._id,
+      label: item.title,
+      type: 'projects',
+    }));
+    const tasks = this.state.tasks.map(item => ({
+      value: item._id,
+      label: item.title,
+      type: 'tasks',
+    }));
     const {
       firstName, lastName, position, avatar,
     } = modalsData.data.employee;
@@ -177,26 +194,24 @@ class AllocationForm extends Component {
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleAutocompleteSelect}
-                items={projects}
+                value={allocation.projectId}
+                options={projects}
+                onChange={this.onAutocompleteSelect}
+                label="Project"
                 type="project"
-                selectedValue={allocation.projectId}
-                valueProperty="_id"
-                labelProperty="title"
-                inputLabel="Project"
+                placeholder="Search a project"
                 required
               />
             </div>
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleAutocompleteSelect}
-                items={tasks}
+                value={allocation.taskId}
+                options={tasks}
+                onChange={this.onAutocompleteSelect}
+                label="Task"
                 type="task"
-                selectedValue={allocation.taskId}
-                valueProperty="_id"
-                labelProperty="title"
-                inputLabel="Task"
+                placeholder="Search a task"
               />
             </div>
 

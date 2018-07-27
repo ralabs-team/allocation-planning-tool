@@ -2,9 +2,9 @@ export default [
   {
     _id: '001',
     userId: '2',
-    taskId: 'pr_001',
+    taskId: '001',
     taskTitle: 'Just task',
-    projectId: '001',
+    projectId: 'pr_001',
     projectTitle: 'The best project',
     startTime: new Date(),
     endTime: new Date(new Date().setDate(new Date().getDate() + 12)),
