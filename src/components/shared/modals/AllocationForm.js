@@ -141,6 +141,13 @@ class AllocationForm extends Component {
     this.props.hideModal();
   }
 
+  deleteAllocation = () => {
+    const allocations = _.reject(this.props.allocations, { _id: this.state.allocation._id });
+
+    this.props.changeAllocations(allocations);
+    this.props.hideModal();
+  }
+
   renderValidateText = () => {
     if (this.state.invalidDate) {
       return (
@@ -282,6 +289,15 @@ class AllocationForm extends Component {
               disabled={!allocation.projectId || invalidDate}
             >
               {modalsData.mode === 'create' ? 'Create' : 'Edit'}
+            </Button>
+          </div>
+
+          <div className="button-wrapper">
+            <Button
+              className="delete-button"
+              onClick={this.deleteAllocation}
+            >
+              Delete
             </Button>
           </div>
 
