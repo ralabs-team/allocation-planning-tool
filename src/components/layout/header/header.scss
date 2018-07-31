@@ -1,0 +1,32 @@
+.header {
+  background: #9e342a;
+  border-bottom: 1px solid #000000;
+
+  .search-panel {
+    display: flex;
+    justify-content: space-between;
+    min-height: 50px;
+    background: #ffffff;
+    padding: 10px;
+    .search-panel__autocomplete {
+      width: 100%;
+      padding-left: 30px;
+    }
+
+    .search-panel__sort {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #1d7cd2;
+      &:hover {
+        color: #41709a;
+      }
+    }
+  }
+}
+
+.tooltip-sort__popover {
+  .tooltip-sort__tooltip {
+    background: #1d7cd2;
+  }
+}

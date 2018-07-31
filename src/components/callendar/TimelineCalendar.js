@@ -6,56 +6,40 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 
 const TimelineCalendar = (props) => {
-  const { employees, allocations } = props;
+  const changeAllocations = (id, allocation) => {
+    const allocations = _.clone(props.allocations);
+    const index = _.findIndex(props.allocations, ['_id', id]);
+    allocations.splice(index, 1, allocation);
 
-  const groups = employees.map(item => ({
-    id: item._id,
-    title: `${item.firstName} ${item.lastName}`,
-  }));
-
-  const items = allocations.map(item => ({
-    ...item,
-    id: item._id,
-    group: item.userId,
-    title: item.taskName,
-    start_time: moment(item.startTime),
-    end_time: moment(item.endTime),
-  }));
+    props.changeAllocations(allocations);
+  };
 
   const onItemMove = (itemId, dragTime, newGroupIndex) => {
     const user = props.employees[newGroupIndex];
+    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const updatedAllocation = {
+      ...allocation,
+      startTime: new Date(dragTime),
+      endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
+      userId: user._id,
+      updateAt: new Date(),
+      updateBy: '001',
+    };
 
-    const newAllocations = allocations.map((allocation) => {
-      if (allocation._id === itemId) {
-        return ({
-          ...allocation,
-          startTime: new Date(dragTime),
-          endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
-          userId: user._id,
-        });
-      }
-
-      return allocation;
-    });
-
-    props.changeAllocations(newAllocations);
+    changeAllocations(itemId, updatedAllocation);
   };
 
   const onItemResize = (itemId, time, edge) => {
-    const newAllocations = allocations.map((allocation) => {
-      if (allocation._id === itemId) {
-        const changedTime = edge === 'right' ? 'startTime' : 'endTime';
+    const changedTime = edge === 'right' ? 'endTime' : 'startTime';
+    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const updatedAllocation = {
+      ...allocation,
+      [changedTime]: new Date(time),
+      updateAt: new Date(),
+      updateBy: '001',
+    };
 
-        return ({
-          ...allocation,
-          [changedTime]: new Date(time),
-        });
-      }
-
-      return allocation;
-    });
-
-    props.changeAllocations(newAllocations);
+    changeAllocations(itemId, updatedAllocation);
   };
 
   const onItemSelect = (itemId, e, time) => {
@@ -65,8 +49,8 @@ const TimelineCalendar = (props) => {
   };
 
   const onItemDoubleClick = (itemId) => {
-    const allocation = _.find(allocations, ['_id', itemId]);
-    const employee = _.find(employees, ['_id', allocation.userId]);
+    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const employee = _.find(props.employees, ['_id', allocation.userId]);
 
     const modalData = {
       type: 'ALLOCATION',
@@ -86,7 +70,7 @@ const TimelineCalendar = (props) => {
       type: 'ALLOCATION',
       mode: 'create',
       data: {
-        employee: employees[group - 1],
+        employee: props.employees[group - 1],
         initialTime: time,
         allocation: null,
       },
@@ -94,6 +78,32 @@ const TimelineCalendar = (props) => {
 
     props.openModal(modalData);
   };
+
+  const {
+    employees, allocations, searchData, sortUp,
+  } = props;
+
+  const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
+
+  const filteredEmployees = !searchData.employeesIds ?
+    sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
+
+  const groups = filteredEmployees.map(item => ({
+    id: item._id,
+    title: `${item.firstName} ${item.lastName}`,
+  }));
+
+  const filteredAllocations = !searchData.projectsIds ?
+    allocations : allocations.filter(item => searchData.projectsIds.includes(item.projectId));
+
+  const items = filteredAllocations.map(item => ({
+    ...item,
+    id: item._id,
+    group: item.userId,
+    title: item.taskName,
+    start_time: moment(item.startTime),
+    end_time: moment(item.endTime),
+  }));
   const dragSnap = 24 * 60 * 60 * 1000; // one day
   const calendarZoom = 24 * 60 * 60 * 1000 * 30; // one month
 
@@ -103,7 +113,8 @@ const TimelineCalendar = (props) => {
       items={items}
       visibleTimeStart={moment().add(-12, 'days').valueOf()}
       visibleTimeEnd={moment().add(12, 'days').valueOf()}
-      sidebarContent={<div>Ralabs</div>}
+      sidebarContent={<h2>Ralabs</h2>}
+      sidebarWidth={260}
       dragSnap={dragSnap}
       minResizeWidth={24}
       lineHeight={100}
@@ -128,6 +139,8 @@ TimelineCalendar.propTypes = {
   allocations: PropTypes.array.isRequired, // eslint-disable-line
   openModal: PropTypes.func.isRequired,
   changeAllocations: PropTypes.func.isRequired,
+  searchData: PropTypes.object.isRequired, // eslint-disable-line
+  sortUp: PropTypes.bool.isRequired,
 };
 
 export default TimelineCalendar;

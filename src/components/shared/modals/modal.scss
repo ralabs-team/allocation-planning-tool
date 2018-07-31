@@ -71,6 +71,14 @@
       }
 
       .cancel-button {
+        background-color: #194f7d;
+        color: #ffffff;
+        &:hover {
+          background-color: #1b3b56;
+        }
+      }
+
+      .delete-button {
         background-color: #e10050;
         color: #ffffff;
         &:hover {

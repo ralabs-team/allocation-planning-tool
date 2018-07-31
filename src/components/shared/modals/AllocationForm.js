@@ -29,24 +29,20 @@ class AllocationForm extends Component {
 
     const { allocation, initialTime, employee } = this.props.modalsData.data;
     const defaultProject = allocation ? _.find(this.props.projects, ['_id', allocation.projectId]) : this.props.projects[0];
-    let defaultAllocation = allocation;
-
-    if (!defaultAllocation) {
-      defaultAllocation = {
-        _id: Math.random().toString(), // will delete
-        userId: employee._id,
-        projectId: defaultProject._id,
-        projectTitle: defaultProject.title,
-        taskId: null,
-        taskTitle: '',
-        startTime: moment(initialTime).hour(0).toDate(),
-        endTime: moment(initialTime).hours(23).minute(59).toDate(),
-        hoursPerDay: '8',
-        notes: '',
-        createAt: new Date(),
-        createBy: '1',
-      };
-    }
+    const defaultAllocation = allocation || {
+      _id: Math.random().toString(), // will delete
+      userId: employee._id,
+      projectId: defaultProject._id,
+      projectTitle: defaultProject.title,
+      taskId: null,
+      taskTitle: '',
+      startTime: moment(initialTime).hour(0).toDate(),
+      endTime: moment(initialTime).hours(23).minute(59).toDate(),
+      hoursPerDay: '8',
+      notes: '',
+      createAt: new Date(),
+      createBy: '1',
+    };
 
     this.state = {
       projects: this.props.projects,
@@ -56,23 +52,32 @@ class AllocationForm extends Component {
     };
   }
 
-  handleAutocompleteSelect = (type, id) => {
+  onAutocompleteSelect = (id, type) => {
     const value = _.find(this.state[`${type}s`], ['_id', id]);
     const title = value ? value.title : null;
-    let { tasks } = this.state;
 
     if (type === 'project') {
-      tasks = value ? value.tasks : this.state.tasks;
-    }
+      const tasks = value ? value.tasks : this.state.tasks;
 
-    this.setState({
-      tasks,
-      allocation: {
-        ...this.state.allocation,
-        [`${type}Id`]: id,
-        [`${type}Title`]: title,
-      },
-    });
+      this.setState({
+        tasks,
+        allocation: {
+          ...this.state.allocation,
+          projectId: id,
+          projectTitle: title,
+          taskId: null,
+          taskTitle: '',
+        },
+      });
+    } else {
+      this.setState({
+        allocation: {
+          ...this.state.allocation,
+          [`${type}Id`]: id,
+          [`${type}Title`]: title,
+        },
+      });
+    }
   }
 
   handleDayChange = (type, day) => {
@@ -136,6 +141,13 @@ class AllocationForm extends Component {
     this.props.hideModal();
   }
 
+  deleteAllocation = () => {
+    const allocations = _.reject(this.props.allocations, { _id: this.state.allocation._id });
+
+    this.props.changeAllocations(allocations);
+    this.props.hideModal();
+  }
+
   renderValidateText = () => {
     if (this.state.invalidDate) {
       return (
@@ -152,9 +164,17 @@ class AllocationForm extends Component {
 
   render() {
     const { modalsData } = this.props;
-    const {
-      allocation, projects, tasks, invalidDate,
-    } = this.state;
+    const { allocation, invalidDate } = this.state;
+    const projects = this.props.projects.map(item => ({
+      value: item._id,
+      label: item.title,
+      type: 'projects',
+    }));
+    const tasks = this.state.tasks.map(item => ({
+      value: item._id,
+      label: item.title,
+      type: 'tasks',
+    }));
     const {
       firstName, lastName, position, avatar,
     } = modalsData.data.employee;
@@ -181,26 +201,24 @@ class AllocationForm extends Component {
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleAutocompleteSelect}
-                items={projects}
+                value={allocation.projectId}
+                options={projects}
+                onChange={this.onAutocompleteSelect}
+                label="Project"
                 type="project"
-                selectedValue={allocation.projectId}
-                valueProperty="_id"
-                labelProperty="title"
-                inputLabel="Project"
+                placeholder="Search a project"
                 required
               />
             </div>
 
             <div className="field-wrapper">
               <Autocomplete
-                handleChange={this.handleAutocompleteSelect}
-                items={tasks}
+                value={allocation.taskId}
+                options={tasks}
+                onChange={this.onAutocompleteSelect}
+                label="Task"
                 type="task"
-                selectedValue={allocation.taskId}
-                valueProperty="_id"
-                labelProperty="title"
-                inputLabel="Task"
+                placeholder="Search a task"
               />
             </div>
 
@@ -273,6 +291,18 @@ class AllocationForm extends Component {
               {modalsData.mode === 'create' ? 'Create' : 'Edit'}
             </Button>
           </div>
+
+          {
+            modalsData.mode === 'edit' &&
+            <div className="button-wrapper">
+              <Button
+                className="delete-button"
+                onClick={this.deleteAllocation}
+              >
+                Delete
+              </Button>
+            </div>
+          }
 
           <div className="button-wrapper">
             <Button

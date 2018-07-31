@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // components
-import TimelineCalendar from '../components/TimelineCalendar';
+import TimelineCalendar from '../components/callendar/TimelineCalendar';
 
 // actions
 import { getUsers, getAllocations, openModal, getProjects, changeAllocations } from '../actions';
@@ -19,6 +18,8 @@ class DashboardPage extends Component {
     allocations: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
     changeAllocations: PropTypes.func.isRequired,
+    searchData: PropTypes.object.isRequired, // eslint-disable-line
+    sortUp: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -28,38 +29,36 @@ class DashboardPage extends Component {
   }
 
   render() {
-    const { users, allocations } = this.props;
+    const {
+      users, allocations, searchData, sortUp,
+    } = this.props;
 
     return (
       <div>
-        <h1>Dashboard Page</h1>
-
-        <div>
-          <Link to="/">Main Page</Link>
-        </div>
-
-        <div className="calendar">
-          {
-            users.length &&
-            <TimelineCalendar
-              employees={users}
-              allocations={allocations}
-              openModal={this.props.openModal}
-              changeAllocations={this.props.changeAllocations}
-            />
-          }
-        </div>
+        {
+          users.length &&
+          <TimelineCalendar
+            employees={users}
+            allocations={allocations}
+            openModal={this.props.openModal}
+            changeAllocations={this.props.changeAllocations}
+            searchData={searchData}
+            sortUp={sortUp}
+          />
+        }
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  const { users, allocations } = state;
+  const { users, allocations, search } = state;
 
   return ({
     users: users.allUsers,
     allocations: allocations.allAllocations,
+    searchData: search.searchData,
+    sortUp: search.sortUp,
   });
 };
 
