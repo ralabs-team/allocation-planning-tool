@@ -2,8 +2,11 @@ import React from 'react';
 import { BrowserRouter, Switch } from 'react-router-dom';
 
 // components
-import LandingPage from '../pages/LandingPage';
-import DashboardPage from '../pages/DashboardPage';
+import {
+  DashboardPage,
+  EmployeesPage,
+  LandingPage,
+} from '../pages';
 
 // custom routes
 import LayoutRoute from './LayoutRoute';
@@ -13,6 +16,7 @@ const AppRouter = () => (
     <Switch>
       <LayoutRoute exact path="/" component={LandingPage} />
       <LayoutRoute exact path="/dashboard" component={DashboardPage} />
+      <LayoutRoute exact path="/employees" component={EmployeesPage} />
     </Switch>
   </BrowserRouter>
 );
