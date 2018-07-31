@@ -292,14 +292,17 @@ class AllocationForm extends Component {
             </Button>
           </div>
 
-          <div className="button-wrapper">
-            <Button
-              className="delete-button"
-              onClick={this.deleteAllocation}
-            >
-              Delete
-            </Button>
-          </div>
+          {
+            modalsData.mode === 'edit' &&
+            <div className="button-wrapper">
+              <Button
+                className="delete-button"
+                onClick={this.deleteAllocation}
+              >
+                Delete
+              </Button>
+            </div>
+          }
 
           <div className="button-wrapper">
             <Button

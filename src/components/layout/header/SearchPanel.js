@@ -40,7 +40,7 @@ const SearchPanel = (props) => {
         options={suggested}
         onChange={onAutocompleteSelect}
         label="Search"
-        placeholder="Peaple and project"
+        placeholder="People and projects"
         multiple
       />
     </div>

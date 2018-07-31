@@ -6,40 +6,40 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 
 const TimelineCalendar = (props) => {
+  const changeAllocations = (id, allocation) => {
+    const allocations = _.clone(props.allocations);
+    const index = _.findIndex(props.allocations, ['_id', id]);
+    allocations.splice(index, 1, allocation);
+
+    props.changeAllocations(allocations);
+  };
+
   const onItemMove = (itemId, dragTime, newGroupIndex) => {
     const user = props.employees[newGroupIndex];
+    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const updatedAllocation = {
+      ...allocation,
+      startTime: new Date(dragTime),
+      endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
+      userId: user._id,
+      updateAt: new Date(),
+      updateBy: '001',
+    };
 
-    const newAllocations = props.allocations.map((allocation) => {
-      if (allocation._id === itemId) {
-        return ({
-          ...allocation,
-          startTime: new Date(dragTime),
-          endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
-          userId: user._id,
-        });
-      }
-
-      return allocation;
-    });
-
-    props.changeAllocations(newAllocations);
+    changeAllocations(itemId, updatedAllocation);
   };
 
   const onItemResize = (itemId, time, edge) => {
-    const newAllocations = props.allocations.map((allocation) => {
-      if (allocation._id === itemId) {
-        const changedTime = edge === 'right' ? 'endTime' : 'startTime';
+    const changedTime = edge === 'right' ? 'endTime' : 'startTime';
+    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const updatedAllocation = {
+      ...allocation,
+      [changedTime]: new Date(time),
+      updateAt: new Date(),
+      updateBy: '001',
+    };
 
-        return ({
-          ...allocation,
-          [changedTime]: new Date(time),
-        });
-      }
-
-      return allocation;
-    });
-
-    props.changeAllocations(newAllocations);
+    changeAllocations(itemId, updatedAllocation);
   };
 
   const onItemSelect = (itemId, e, time) => {
