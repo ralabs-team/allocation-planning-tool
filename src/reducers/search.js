@@ -1,4 +1,4 @@
-import { SET_SEARCH } from '../actions';
+import { SET_SEARCH, REVERSE_SORT } from '../actions';
 
 const initialState = {
   searchData: {
@@ -6,6 +6,7 @@ const initialState = {
     employeesIds: null,
     projectsIds: null,
   },
+  sortUp: true,
 };
 
 export default function search(state = initialState, action) {
@@ -14,6 +15,11 @@ export default function search(state = initialState, action) {
       return {
         ...state,
         searchData: action.payload,
+      };
+    case REVERSE_SORT:
+      return {
+        ...state,
+        sortUp: !state.sortUp,
       };
     default:
       return state;

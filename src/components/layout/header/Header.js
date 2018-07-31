@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import SearchPanel from './SearchPanel';
-import { setSearch } from '../../../actions';
+import { setSearch, reverseSort } from '../../../actions';
 
 import './header.css';
 
@@ -30,6 +30,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setSearch: bindActionCreators(setSearch, dispatch),
+  reverseSort: () => { dispatch(reverseSort()); },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

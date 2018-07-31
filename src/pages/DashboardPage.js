@@ -19,6 +19,7 @@ class DashboardPage extends Component {
     users: PropTypes.array.isRequired, // eslint-disable-line
     changeAllocations: PropTypes.func.isRequired,
     searchData: PropTypes.object.isRequired, // eslint-disable-line
+    sortUp: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -28,7 +29,9 @@ class DashboardPage extends Component {
   }
 
   render() {
-    const { users, allocations, searchData } = this.props;
+    const {
+      users, allocations, searchData, sortUp,
+    } = this.props;
 
     return (
       <div>
@@ -40,6 +43,7 @@ class DashboardPage extends Component {
             openModal={this.props.openModal}
             changeAllocations={this.props.changeAllocations}
             searchData={searchData}
+            sortUp={sortUp}
           />
         }
       </div>
@@ -54,6 +58,7 @@ const mapStateToProps = (state) => {
     users: users.allUsers,
     allocations: allocations.allAllocations,
     searchData: search.searchData,
+    sortUp: search.sortUp,
   });
 };
 

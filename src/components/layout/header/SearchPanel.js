@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SortIcon from '@material-ui/icons/Sort';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Autocomplete from '../../shared/autocomplete/Autocomplete';
 
@@ -35,14 +37,26 @@ const SearchPanel = (props) => {
 
   return (
     <div className="search-panel">
-      <Autocomplete
-        value={props.searchData.searchValues}
-        options={suggested}
-        onChange={onAutocompleteSelect}
-        label="Search"
-        placeholder="People and projects"
-        multiple
-      />
+      <div className="search-panel__sort">
+        <Tooltip
+          classes={{ popper: 'tooltip-sort__popover', tooltip: 'tooltip-sort__tooltip' }}
+          title="Sort by Last Name"
+          placement="top"
+        >
+          <SortIcon onClick={props.reverseSort} />
+        </Tooltip>
+      </div>
+
+      <div className="search-panel__autocomplete">
+        <Autocomplete
+          value={props.searchData.searchValues}
+          options={suggested}
+          onChange={onAutocompleteSelect}
+          label="Search"
+          placeholder="People and projects"
+          multiple
+        />
+      </div>
     </div>
   );
 };
@@ -52,6 +66,7 @@ SearchPanel.propTypes = {
   employees: PropTypes.array.isRequired, // eslint-disable-line
   setSearch: PropTypes.func.isRequired,
   searchData: PropTypes.object.isRequired, // eslint-disable-line
+  reverseSort: PropTypes.func.isRequired,
 };
 
 export default SearchPanel;

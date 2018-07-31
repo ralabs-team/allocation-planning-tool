@@ -79,10 +79,14 @@ const TimelineCalendar = (props) => {
     props.openModal(modalData);
   };
 
-  const { employees, allocations, searchData } = props;
+  const {
+    employees, allocations, searchData, sortUp,
+  } = props;
+
+  const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
 
   const filteredEmployees = !searchData.employeesIds ?
-    employees : employees.filter(item => searchData.employeesIds.includes(item._id));
+    sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
 
   const groups = filteredEmployees.map(item => ({
     id: item._id,
@@ -136,6 +140,7 @@ TimelineCalendar.propTypes = {
   openModal: PropTypes.func.isRequired,
   changeAllocations: PropTypes.func.isRequired,
   searchData: PropTypes.object.isRequired, // eslint-disable-line
+  sortUp: PropTypes.bool.isRequired,
 };
 
 export default TimelineCalendar;
