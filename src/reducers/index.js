@@ -3,13 +3,13 @@ import { combineReducers } from 'redux';
 // reducers
 import modals from './modals';
 import projects from './projects';
-import schedulers from './schedulers';
+import allocations from './allocations';
 import users from './users';
 
 const appReducer = combineReducers({
   modals,
   projects,
-  schedulers,
+  allocations,
   users,
 });
 const rootReducer = (state, action) => appReducer(state, action);
