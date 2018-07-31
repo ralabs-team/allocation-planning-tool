@@ -70,7 +70,7 @@ const TimelineCalendar = (props) => {
       type: 'ALLOCATION',
       mode: 'create',
       data: {
-        employee: props.employees[group - 1],
+        employee: _.find(props.employees, ['_id', group]),
         initialTime: time,
         allocation: null,
       },
