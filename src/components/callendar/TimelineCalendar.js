@@ -6,10 +6,14 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 
-const minZoom = 1000 * 60 * 60 * 24 * 7; // week
+const minZoom = 1000 * 60 * 60 * 24; // week
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 
 class TimelineCalendar extends React.Component {
+  state = {
+    minTime: moment().startOf('M').valueOf(),
+    maxTime: moment().endOf('M').valueOf(),
+  }
   visibleTimeStart = moment().startOf('w').valueOf();
   visibleTimeEnd = moment().endOf('w').valueOf();
 
@@ -77,7 +81,7 @@ class TimelineCalendar extends React.Component {
   }
 
   onCanvasClick(group, time) {
-    // console.log(moment(time).format('DD-MM'), group);
+    console.log(moment(time).format('DD-MM'), group);
     const modalData = {
       type: 'ALLOCATION',
       mode: 'create',
@@ -117,7 +121,7 @@ class TimelineCalendar extends React.Component {
       start_time: moment(item.startTime),
       end_time: moment(item.endTime),
     }));
-    const dragSnap = 24 * 60 * 60 * 1000; // one day
+    const dragSnap = 60 * 60 * 1000; // one hour
 
     return (
       <Timeline
@@ -142,6 +146,27 @@ class TimelineCalendar extends React.Component {
         onItemSelect={this.onItemSelect}
         onItemDoubleClick={this.onItemDoubleClick}
         onCanvasClick={this.onCanvasClick}
+        onTimeChange={(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) => {
+          const { minTime, maxTime } = this.state;
+          let start;
+          let end;
+          if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
+            start = minTime;
+            end = maxTime;
+          } else if (visibleTimeStart < minTime) {
+            start = minTime;
+            end = minTime + (visibleTimeEnd - visibleTimeStart);
+          } else if (visibleTimeEnd > maxTime) {
+            start = maxTime - (visibleTimeEnd - visibleTimeStart);
+            end = maxTime;
+          } else {
+            start = visibleTimeStart;
+            end = visibleTimeEnd;
+          }
+          this.visibleTimeStart = start;
+          this.visibleTimeEnd = end;
+          updateScrollCanvas(start, end);
+        }}
       />
     );
   }
