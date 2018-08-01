@@ -17,6 +17,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LineStyleIcon from '@material-ui/icons/LineStyle';
 import PersonIcon from '@material-ui/icons/Person';
 import DraftsIcon from '@material-ui/icons/ExitToApp';
+import PeopleIcon from '@material-ui/icons/People';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 
 import SearchPanel from './SearchPanel';
 import { setSearch, reverseSort } from '../../../actions';
@@ -34,12 +38,15 @@ const styles = theme => ({
     marginTop: 48,
     marginLeft: 10,
   },
-  icon: {
+  logoIcon: {
     marginRight: theme.spacing.unit,
     fontSize: 32,
   },
   logoText: {
     fontSize: 20,
+  },
+  buttonIcon: {
+    marginRight: 5,
   },
 });
 
@@ -59,17 +66,20 @@ class Header extends React.Component {
               <Toolbar>
                 <Typography variant="title" color="inherit" className={classes.flex} >
                   <Button color="inherit" component={Link} to="/" disableRipple>
-                    <LineStyleIcon color="inherit" className={classes.icon} />
+                    <LineStyleIcon color="inherit" className={classes.logoIcon} />
                     <span className={classes.logoText}>Allocation Planning Tool</span>
                   </Button>
                 </Typography>
                 <Button color="inherit" component={Link} to="/dashboard">
+                  <AssignmentIcon className={classes.buttonIcon} />
                   Schedule
                 </Button>
                 <Button color="inherit" component={Link} to="/projects">
+                  <BusinessCenterIcon className={classes.buttonIcon} />
                   Projects
                 </Button>
                 <Button color="inherit" component={Link} to="/employees">
+                  <PeopleIcon className={classes.buttonIcon} />
                   People
                 </Button>
                 <div>
@@ -79,6 +89,7 @@ class Header extends React.Component {
                     onClick={event => this.setState({ anchorEl: event.currentTarget })}
                     aria-haspopup
                   >
+                    <AccountBoxIcon className={classes.buttonIcon} />
                     My profile
                   </Button>
                   <Menu
