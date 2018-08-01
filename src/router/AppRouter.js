@@ -7,6 +7,7 @@ import {
   EmployeesPage,
   LandingPage,
   ProjectsPage,
+  SettingsPage,
 } from '../pages';
 
 // custom routes
@@ -19,6 +20,7 @@ const AppRouter = () => (
       <LayoutRoute exact path="/dashboard" component={DashboardPage} />
       <LayoutRoute exact path="/employees" component={EmployeesPage} />
       <LayoutRoute exact path="/projects" component={ProjectsPage} />
+      <LayoutRoute exact path="/settings" component={SettingsPage} />
     </Switch>
   </BrowserRouter>
 );
