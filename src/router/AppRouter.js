@@ -17,9 +17,9 @@ const AppRouter = () => (
   <BrowserRouter>
     <Switch>
       <LayoutRoute exact path="/" component={LandingPage} />
-      <LayoutRoute exact path="/dashboard" component={DashboardPage} />
-      <LayoutRoute exact path="/employees" component={EmployeesPage} />
-      <LayoutRoute exact path="/projects" component={ProjectsPage} />
+      <LayoutRoute exact path="/dashboard" component={DashboardPage} renderSearch />
+      <LayoutRoute exact path="/employees" component={EmployeesPage} renderSearch />
+      <LayoutRoute exact path="/projects" component={ProjectsPage} renderSearch />
       <LayoutRoute exact path="/settings" component={SettingsPage} />
     </Switch>
   </BrowserRouter>

@@ -48,7 +48,7 @@ class Header extends React.Component {
     anchorEl: null,
   }
   render() {
-    const { classes } = this.props;
+    const { classes, renderSearch } = this.props;
     const { anchorEl } = this.state;
     const profileSubMenuOpen = !!anchorEl;
     return (
@@ -106,13 +106,16 @@ class Header extends React.Component {
             </AppBar>
           </div>
         </div>
-        <SearchPanel {...this.props} />
+        {renderSearch &&
+          <SearchPanel {...this.props} />
+        }
       </div>);
   }
 }
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line
+  renderSearch: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
