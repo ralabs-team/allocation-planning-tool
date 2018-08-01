@@ -65,7 +65,7 @@ const TimelineCalendar = (props) => {
     props.openModal(modalData);
   };
 
-  const onCanvasDoubleClick = (group, time) => {
+  const onCanvasClick = (group, time) => {
     const modalData = {
       type: 'ALLOCATION',
       mode: 'create',
@@ -129,7 +129,7 @@ const TimelineCalendar = (props) => {
       onItemResize={onItemResize}
       onItemSelect={onItemSelect}
       onItemDoubleClick={onItemDoubleClick}
-      onCanvasDoubleClick={onCanvasDoubleClick}
+      onCanvasClick={onCanvasClick}
     />
   );
 };
