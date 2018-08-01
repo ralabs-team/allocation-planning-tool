@@ -3,6 +3,7 @@ import { GET_PROJECTS, getProjects } from './projects';
 import { GET_ALLOCATIONS, getAllocations, ADD_ALLOCATION, addAllocation, CHANGE_ALLOCATIONS, changeAllocations } from './allocations';
 import { SET_SEARCH, setSearch, REVERSE_SORT, reverseSort } from './search';
 import { GET_USERS, getUsers } from './users';
+import { LOG_OUT, logOut } from './auth';
 
 export {
   OPEN_MODAL,
@@ -23,4 +24,6 @@ export {
   reverseSort,
   GET_USERS,
   getUsers,
+  LOG_OUT,
+  logOut,
 };

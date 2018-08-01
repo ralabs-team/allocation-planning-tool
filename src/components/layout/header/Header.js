@@ -16,6 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 // icons
 import LineStyleIcon from '@material-ui/icons/LineStyle';
 import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DraftsIcon from '@material-ui/icons/ExitToApp';
 import PeopleIcon from '@material-ui/icons/People';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -23,7 +24,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 
 import SearchPanel from './SearchPanel';
-import { setSearch, reverseSort } from '../../../actions';
+import { setSearch, reverseSort, logOut } from '../../../actions';
 
 import './header.css';
 
@@ -48,16 +49,85 @@ const styles = theme => ({
   buttonIcon: {
     marginRight: 5,
   },
+  buttonsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
 });
 
 class Header extends React.Component {
   state = {
     anchorEl: null,
   }
-  render() {
-    const { classes, renderSearch } = this.props;
+  renderLoggedInButtons() {
+    const { classes } = this.props;
     const { anchorEl } = this.state;
     const profileSubMenuOpen = !!anchorEl;
+    return (
+      <div className={classes.buttonsContainer}>
+        <Button color="inherit" component={Link} to="/dashboard">
+          <AssignmentIcon className={classes.buttonIcon} />
+          Schedule
+        </Button>
+        <Button color="inherit" component={Link} to="/projects">
+          <BusinessCenterIcon className={classes.buttonIcon} />
+          Projects
+        </Button>
+        <Button color="inherit" component={Link} to="/employees">
+          <PeopleIcon className={classes.buttonIcon} />
+          People
+        </Button>
+        <div>
+          <Button
+            color="inherit"
+            aria-owns={profileSubMenuOpen ? 'menu-appbar' : null}
+            onClick={event => this.setState({ anchorEl: event.currentTarget })}
+            aria-haspopup
+          >
+            <AccountBoxIcon className={classes.buttonIcon} />
+            My profile
+          </Button>
+          <Menu
+            id="menu-appbar"
+            className={classes.menu}
+            anchorEl={anchorEl}
+            open={profileSubMenuOpen}
+            onClick={() => this.setState({ anchorEl: null })}
+          >
+            <MenuItem component={Link} to="/settings">
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText>Settings</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => this.props.logOut()} component={Link} to="/">
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText>Log out</ListItemText>
+            </MenuItem>
+          </Menu>
+        </div>
+      </div>
+    );
+  }
+  renderNotLoggedInButtons() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.buttonsContainer}>
+        <Button color="inherit">
+          <PersonIcon className={classes.buttonIcon} />
+          Log In
+        </Button>
+        <Button color="inherit">
+          <PersonAddIcon className={classes.buttonIcon} />
+          Sign Up
+        </Button>
+      </div>
+    );
+  }
+  render() {
+    const { classes, renderSearch, loggedIn } = this.props;
     return (
       <div className="header">
         <div className="header-bar">
@@ -70,54 +140,12 @@ class Header extends React.Component {
                     <span className={classes.logoText}>Allocation Planning Tool</span>
                   </Button>
                 </Typography>
-                <Button color="inherit" component={Link} to="/dashboard">
-                  <AssignmentIcon className={classes.buttonIcon} />
-                  Schedule
-                </Button>
-                <Button color="inherit" component={Link} to="/projects">
-                  <BusinessCenterIcon className={classes.buttonIcon} />
-                  Projects
-                </Button>
-                <Button color="inherit" component={Link} to="/employees">
-                  <PeopleIcon className={classes.buttonIcon} />
-                  People
-                </Button>
-                <div>
-                  <Button
-                    color="inherit"
-                    aria-owns={profileSubMenuOpen ? 'menu-appbar' : null}
-                    onClick={event => this.setState({ anchorEl: event.currentTarget })}
-                    aria-haspopup
-                  >
-                    <AccountBoxIcon className={classes.buttonIcon} />
-                    My profile
-                  </Button>
-                  <Menu
-                    id="menu-appbar"
-                    className={classes.menu}
-                    anchorEl={anchorEl}
-                    open={profileSubMenuOpen}
-                    onClick={() => this.setState({ anchorEl: null })}
-                  >
-                    <MenuItem component={Link} to="/settings">
-                      <ListItemIcon>
-                        <PersonIcon />
-                      </ListItemIcon>
-                      <ListItemText>Settings</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                      <ListItemIcon>
-                        <DraftsIcon />
-                      </ListItemIcon>
-                      <ListItemText>Log out</ListItemText>
-                    </MenuItem>
-                  </Menu>
-                </div>
+                {loggedIn ? this.renderLoggedInButtons() : this.renderNotLoggedInButtons()}
               </Toolbar>
             </AppBar>
           </div>
         </div>
-        {renderSearch &&
+        {renderSearch && loggedIn &&
           <SearchPanel {...this.props} />
         }
       </div>);
@@ -127,17 +155,21 @@ class Header extends React.Component {
 Header.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line
   renderSearch: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
+  logOut: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   projects: state.projects.allProjects,
   employees: state.users.allUsers,
   searchData: state.search.searchData,
+  loggedIn: state.auth.loggedIn,
 });
 
 const mapDispatchToProps = dispatch => ({
   setSearch: bindActionCreators(setSearch, dispatch),
-  reverseSort: () => { dispatch(reverseSort()); },
+  reverseSort: () => dispatch(reverseSort()),
+  logOut: () => dispatch(logOut()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Header));
