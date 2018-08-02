@@ -6,7 +6,7 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 
-const minZoom = 1000 * 60 * 60 * 24; // week
+const minZoom = 1000 * 60 * 60 * 24; // day
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 
 class TimelineCalendar extends React.Component {

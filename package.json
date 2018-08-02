@@ -1,5 +1,6 @@
 {
   "name": "allocation-planning-tool",
+  "homepage": "http://ralabs-team.github.io/allocation-planning-tool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,7 +34,8 @@
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "deploy-github": "npm run build && gh-pages -d build"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
@@ -41,6 +43,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.9.1",
+    "gh-pages": "^1.2.0",
     "git-scripts": "^0.2.1"
   },
   "engineStrict": true,
