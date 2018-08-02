@@ -14,7 +14,7 @@ import {
 import LayoutRoute from './LayoutRoute';
 
 const AppRouter = () => (
-  <HashRouter >
+  <HashRouter>
     <Switch>
       <LayoutRoute exact path="/" component={LandingPage} />
       <LayoutRoute exact path="/dashboard" component={DashboardPage} renderSearch />

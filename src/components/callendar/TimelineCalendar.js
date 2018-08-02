@@ -173,11 +173,11 @@ class TimelineCalendar extends React.Component {
 }
 
 TimelineCalendar.propTypes = {
-  employees: PropTypes.array.isRequired, // eslint-disable-line
-  allocations: PropTypes.array.isRequired, // eslint-disable-line
+  employees: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allocations: PropTypes.arrayOf(PropTypes.object).isRequired,
   openModal: PropTypes.func.isRequired,
   changeAllocations: PropTypes.func.isRequired,
-  searchData: PropTypes.object.isRequired, // eslint-disable-line
+  searchData: PropTypes.objectOf(PropTypes.array).isRequired,
   sortUp: PropTypes.bool.isRequired,
 };
 
