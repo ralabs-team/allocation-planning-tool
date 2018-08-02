@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { HashRouter, Switch } from 'react-router-dom';
 
 // components
 import {
@@ -14,7 +14,7 @@ import {
 import LayoutRoute from './LayoutRoute';
 
 const AppRouter = () => (
-  <BrowserRouter>
+  <HashRouter >
     <Switch>
       <LayoutRoute exact path="/" component={LandingPage} />
       <LayoutRoute exact path="/dashboard" component={DashboardPage} renderSearch />
@@ -22,7 +22,7 @@ const AppRouter = () => (
       <LayoutRoute exact path="/projects" component={ProjectsPage} renderSearch />
       <LayoutRoute exact path="/settings" component={SettingsPage} />
     </Switch>
-  </BrowserRouter>
+  </HashRouter>
 );
 
 export default AppRouter;
