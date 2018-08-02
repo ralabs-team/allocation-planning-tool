@@ -2,12 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
-import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 
-const minZoom = 1000 * 60 * 60 * 24; // day
+import 'react-calendar-timeline/lib/Timeline.css';
+import './calendar.css';
+
+const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
+const dragSnap = 60 * 60 * 1000 * 24; // day
 
 class TimelineCalendar extends React.Component {
   state = {
@@ -81,7 +84,6 @@ class TimelineCalendar extends React.Component {
   }
 
   onCanvasClick(group, time) {
-    console.log(moment(time).format('DD-MM'), group);
     const modalData = {
       type: 'ALLOCATION',
       mode: 'create',
@@ -93,6 +95,37 @@ class TimelineCalendar extends React.Component {
     };
 
     this.props.openModal(modalData);
+  }
+
+  onTimeChange(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) {
+    const { minTime, maxTime } = this.state;
+    let start;
+    let end;
+    if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
+      start = minTime;
+      end = maxTime;
+    } else if (visibleTimeStart < minTime) {
+      start = minTime;
+      end = minTime + (visibleTimeEnd - visibleTimeStart);
+    } else if (visibleTimeEnd > maxTime) {
+      start = maxTime - (visibleTimeEnd - visibleTimeStart);
+      end = maxTime;
+    } else {
+      start = visibleTimeStart;
+      end = visibleTimeEnd;
+    }
+    this.visibleTimeStart = start;
+    this.visibleTimeEnd = end;
+    updateScrollCanvas(start, end);
+  }
+
+  itemRenderer({ item }) {
+    return (
+      <div>
+        <div className="title-project">{item.projectTitle}</div>
+        <p className="title-task">{item.taskTitle}</p>
+      </div>
+    );
   }
 
   render() {
@@ -121,7 +154,6 @@ class TimelineCalendar extends React.Component {
       start_time: moment(item.startTime),
       end_time: moment(item.endTime),
     }));
-    const dragSnap = 60 * 60 * 1000; // one hour
 
     return (
       <Timeline
@@ -131,42 +163,23 @@ class TimelineCalendar extends React.Component {
         visibleTimeEnd={this.visibleTimeEnd}
         sidebarContent={<h2>Ralabs</h2>}
         sidebarWidth={260}
-        dragSnap={dragSnap}
         minResizeWidth={24}
         lineHeight={100}
         headerLabelGroupHeight={40}
         headerLabelHeight={40}
-        itemHeightRatio={0.3}
+        itemHeightRatio={0.97}
         minZoom={minZoom}
         maxZoom={maxZoom}
-        stackItems
+        dragSnap={dragSnap}
         canResize="both"
+        stackItems
         onItemMove={this.onItemMove}
         onItemResize={this.onItemResize}
         onItemSelect={this.onItemSelect}
         onItemDoubleClick={this.onItemDoubleClick}
         onCanvasClick={this.onCanvasClick}
-        onTimeChange={(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) => {
-          const { minTime, maxTime } = this.state;
-          let start;
-          let end;
-          if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
-            start = minTime;
-            end = maxTime;
-          } else if (visibleTimeStart < minTime) {
-            start = minTime;
-            end = minTime + (visibleTimeEnd - visibleTimeStart);
-          } else if (visibleTimeEnd > maxTime) {
-            start = maxTime - (visibleTimeEnd - visibleTimeStart);
-            end = maxTime;
-          } else {
-            start = visibleTimeStart;
-            end = visibleTimeEnd;
-          }
-          this.visibleTimeStart = start;
-          this.visibleTimeEnd = end;
-          updateScrollCanvas(start, end);
-        }}
+        onTimeChange={this.onTimeChange}
+        itemRenderer={this.itemRenderer}
       />
     );
   }

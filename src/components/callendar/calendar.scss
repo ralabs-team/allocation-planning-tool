@@ -1,0 +1,44 @@
+// calendar component
+@mixin ITEM_FONT {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+$item-color: rgba(0, 143, 251, 0.9);
+$item-color_selected: rgba(0, 143, 251, 0.65);
+
+$item-border-size: 2.5px;
+$item-border: $item-border-size solid rgba(0, 0, 0, 0.5);
+$item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
+
+
+.react-calendar-timeline {
+  .rct-item {
+    @include ITEM_FONT;
+    border-radius: 5%;
+    border: $item-border;
+    background-color: $item-color;
+    padding: 5px 2px 5px 2px;
+
+    line-height: normal !important;
+    border-bottom: none !important;
+    border-top: none !important;
+    &.selected {
+      background-color: $item-color_selected;
+      border: $item-border_selected;
+    }
+    .rct-item-content {
+      & * {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .title-project {
+        text-transform: uppercase;
+        margin-bottom: 3px;
+        font-size: 16px;
+      }
+      .title-task {
+        font-size: 15px;
+      }
+    }
+  }
+}
