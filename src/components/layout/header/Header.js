@@ -60,20 +60,35 @@ class Header extends React.Component {
     anchorEl: null,
   }
   renderLoggedInButtons() {
-    const { classes } = this.props;
+    const { classes, page } = this.props;
     const { anchorEl } = this.state;
     const profileSubMenuOpen = !!anchorEl;
     return (
       <div className={classes.buttonsContainer}>
-        <Button color="inherit" component={Link} to="/dashboard">
+        <Button
+          color="inherit"
+          component={Link}
+          to="/dashboard"
+          className={page === 'dashboard' ? 'is-active' : ''}
+        >
           <AssignmentIcon className={classes.buttonIcon} />
           Schedule
         </Button>
-        <Button color="inherit" component={Link} to="/projects">
+        <Button
+          color="inherit"
+          component={Link}
+          to="/projects"
+          className={page === 'projects' ? 'is-active' : ''}
+        >
           <BusinessCenterIcon className={classes.buttonIcon} />
           Projects
         </Button>
-        <Button color="inherit" component={Link} to="/employees">
+        <Button
+          color="inherit"
+          component={Link}
+          to="/employees"
+          className={page === 'employees' ? 'is-active' : ''}
+        >
           <PeopleIcon className={classes.buttonIcon} />
           People
         </Button>
@@ -83,6 +98,7 @@ class Header extends React.Component {
             aria-owns={profileSubMenuOpen ? 'menu-appbar' : null}
             onClick={event => this.setState({ anchorEl: event.currentTarget })}
             aria-haspopup
+            className={page === 'settings' ? 'is-active' : ''}
           >
             <AccountBoxIcon className={classes.buttonIcon} />
             My profile
@@ -157,6 +173,7 @@ Header.propTypes = {
   renderSearch: PropTypes.bool.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   logOut: PropTypes.func.isRequired,
+  page: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

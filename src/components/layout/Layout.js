@@ -10,9 +10,13 @@ const Layout = (props) => {
 
   delete childProps.children;
   delete childProps.renderSearch;
+  childProps.page = props.location.pathname.slice(1);
   return (
     <div className="layout">
-      <Header renderSearch={props.renderSearch} />
+      <Header
+        {...childProps}
+        renderSearch={props.renderSearch}
+      />
 
       <Modal />
 
@@ -24,6 +28,7 @@ const Layout = (props) => {
 Layout.propTypes = {
   children: PropTypes.element.isRequired,
   renderSearch: PropTypes.bool,
+  location: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 Layout.defaultProps = {
   renderSearch: false,

@@ -33,7 +33,20 @@ const SearchPanel = (props) => {
     label: item.title,
     type: 'projects',
   }));
-  const suggested = [...employees, ...projects];
+
+  const getSuggested = () => {
+    switch (props.page) {
+      case 'dashboard':
+        return [...employees, ...projects];
+      case 'employees':
+        return employees;
+      case 'projects':
+        return projects;
+      default:
+        return [...employees, ...projects];
+    }
+  };
+
 
   return (
     <div className="search-panel">
@@ -50,7 +63,7 @@ const SearchPanel = (props) => {
       <div className="search-panel__autocomplete">
         <Autocomplete
           value={props.searchData.searchValues}
-          options={suggested}
+          options={getSuggested()}
           onChange={onAutocompleteSelect}
           label="Search"
           placeholder="People and projects"
@@ -67,6 +80,7 @@ SearchPanel.propTypes = {
   setSearch: PropTypes.func.isRequired,
   searchData: PropTypes.object.isRequired, // eslint-disable-line
   reverseSort: PropTypes.func.isRequired,
+  page: PropTypes.string.isRequired,
 };
 
 export default SearchPanel;
