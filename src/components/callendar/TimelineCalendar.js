@@ -12,17 +12,40 @@ const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 const dragSnap = 60 * 60 * 1000 * 24; // day
 
+const getVisiblePeriod = () => {
+  const now = moment().startOf('d');
+  const start = moment(now).startOf('M');
+  const end = moment(now).endOf('M');
+  if (now.diff(start, 'd') <= 4) {
+    return {
+      minDate: start,
+      maxDate: moment(start).add(5, 'd'),
+    };
+  } else if (end.diff(now, 'd') <= 4) {
+    return {
+      minDate: moment(end).add(-5, 'd'),
+      maxDate: end,
+    };
+  }
+  return {
+    minDate: now,
+    maxDate: moment(now).add(5, 'd'),
+  };
+};
+
 class TimelineCalendar extends React.Component {
   state = {
     minTime: moment().startOf('M').valueOf(),
     maxTime: moment().endOf('M').valueOf(),
   }
-  visibleTimeStart = moment().startOf('w').valueOf();
-  visibleTimeEnd = moment().endOf('w').valueOf();
 
   constructor(props) {
     super(props);
     autoBind(this);
+
+    const { minDate, maxDate } = getVisiblePeriod();
+    this.visibleTimeStart = minDate.valueOf();
+    this.visibleTimeEnd = maxDate.valueOf();
   }
   changeAllocations(id, allocation) {
     const allocations = _.clone(this.props.allocations);
