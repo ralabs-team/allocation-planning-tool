@@ -7,3 +7,21 @@ body, h1, h2, h3, h4, h5, h6, p {
 * {
   box-sizing: border-box;
 }
+
+/** lists styles */
+
+@keyframes employee-hover {
+    from {background-color: #b1b1b1;}
+    to {background-color: #ececec;}
+}
+
+.list {
+  .list-item {
+    &:hover {
+      background-color: #ececec;
+      cursor: pointer;
+      animation-name: employee-hover;
+      animation-duration: 2s;
+    }
+  }
+}
