@@ -181,6 +181,7 @@ const mapStateToProps = state => ({
   employees: state.users.allUsers,
   searchData: state.search.searchData,
   loggedIn: state.auth.loggedIn,
+  sortUp: state.search.sortUp,
 });
 
 const mapDispatchToProps = dispatch => ({

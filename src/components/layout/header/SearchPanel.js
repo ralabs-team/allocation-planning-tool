@@ -47,6 +47,7 @@ const SearchPanel = (props) => {
     }
   };
 
+  const sortIconClass = props.sortUp ? 'sort-up' : 'sort-down';
 
   return (
     <div className="search-panel">
@@ -56,7 +57,10 @@ const SearchPanel = (props) => {
           title="Sort by Last Name"
           placement="top"
         >
-          <SortIcon onClick={props.reverseSort} />
+          <SortIcon
+            onClick={props.reverseSort}
+            classes={{ root: sortIconClass }}
+          />
         </Tooltip>
       </div>
 
@@ -75,12 +79,13 @@ const SearchPanel = (props) => {
 };
 
 SearchPanel.propTypes = {
-  projects: PropTypes.array.isRequired, // eslint-disable-line
-  employees: PropTypes.array.isRequired, // eslint-disable-line
+  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
+  employees: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSearch: PropTypes.func.isRequired,
-  searchData: PropTypes.object.isRequired, // eslint-disable-line
+  searchData: PropTypes.objectOf(PropTypes.array).isRequired,
   reverseSort: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
+  sortUp: PropTypes.bool.isRequired,
 };
 
 export default SearchPanel;

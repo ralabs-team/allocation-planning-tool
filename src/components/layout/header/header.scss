@@ -21,6 +21,10 @@
       &:hover {
         color: #41709a;
       }
+
+      .sort-down {
+        transform: rotate(180deg);
+      }
     }
   }
 }
