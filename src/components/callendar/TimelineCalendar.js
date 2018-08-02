@@ -4,19 +4,34 @@ import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
 import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
+import autoBind from 'react-autobind';
 
-const TimelineCalendar = (props) => {
-  const changeAllocations = (id, allocation) => {
-    const allocations = _.clone(props.allocations);
-    const index = _.findIndex(props.allocations, ['_id', id]);
+const minZoom = 1000 * 60 * 60 * 24; // day
+const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
+
+class TimelineCalendar extends React.Component {
+  state = {
+    minTime: moment().startOf('M').valueOf(),
+    maxTime: moment().endOf('M').valueOf(),
+  }
+  visibleTimeStart = moment().startOf('w').valueOf();
+  visibleTimeEnd = moment().endOf('w').valueOf();
+
+  constructor(props) {
+    super(props);
+    autoBind(this);
+  }
+  changeAllocations(id, allocation) {
+    const allocations = _.clone(this.props.allocations);
+    const index = _.findIndex(this.props.allocations, ['_id', id]);
     allocations.splice(index, 1, allocation);
 
-    props.changeAllocations(allocations);
-  };
+    this.props.changeAllocations(allocations);
+  }
 
-  const onItemMove = (itemId, dragTime, newGroupIndex) => {
-    const user = props.employees[newGroupIndex];
-    const allocation = _.find(props.allocations, ['_id', itemId]);
+  onItemMove(itemId, dragTime, newGroupIndex) {
+    const user = this.props.employees[newGroupIndex];
+    const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
       startTime: new Date(dragTime),
@@ -26,12 +41,12 @@ const TimelineCalendar = (props) => {
       updateBy: '001',
     };
 
-    changeAllocations(itemId, updatedAllocation);
-  };
+    this.changeAllocations(itemId, updatedAllocation);
+  }
 
-  const onItemResize = (itemId, time, edge) => {
+  onItemResize(itemId, time, edge) {
     const changedTime = edge === 'right' ? 'endTime' : 'startTime';
-    const allocation = _.find(props.allocations, ['_id', itemId]);
+    const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
       [changedTime]: new Date(time),
@@ -39,18 +54,18 @@ const TimelineCalendar = (props) => {
       updateBy: '001',
     };
 
-    changeAllocations(itemId, updatedAllocation);
-  };
+    this.changeAllocations(itemId, updatedAllocation);
+  }
 
-  const onItemSelect = (itemId, e, time) => {
+  onItemSelect(itemId, e, time) {
     console.log('itemId ', itemId);
     console.log('e ', e);
     console.log('time ', time);
-  };
+  }
 
-  const onItemDoubleClick = (itemId) => {
-    const allocation = _.find(props.allocations, ['_id', itemId]);
-    const employee = _.find(props.employees, ['_id', allocation.userId]);
+  onItemDoubleClick(itemId) {
+    const allocation = _.find(this.props.allocations, ['_id', itemId]);
+    const employee = _.find(this.props.employees, ['_id', allocation.userId]);
 
     const modalData = {
       type: 'ALLOCATION',
@@ -62,77 +77,100 @@ const TimelineCalendar = (props) => {
       },
     };
 
-    props.openModal(modalData);
-  };
+    this.props.openModal(modalData);
+  }
 
-  const onCanvasDoubleClick = (group, time) => {
+  onCanvasClick(group, time) {
+    console.log(moment(time).format('DD-MM'), group);
     const modalData = {
       type: 'ALLOCATION',
       mode: 'create',
       data: {
-        employee: _.find(props.employees, ['_id', group]),
+        employee: _.find(this.props.employees, ['_id', group]),
         initialTime: time,
         allocation: null,
       },
     };
 
-    props.openModal(modalData);
-  };
+    this.props.openModal(modalData);
+  }
 
-  const {
-    employees, allocations, searchData, sortUp,
-  } = props;
+  render() {
+    const {
+      employees, allocations, searchData, sortUp,
+    } = this.props;
 
-  const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
+    const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
 
-  const filteredEmployees = !searchData.employeesIds ?
-    sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
+    const filteredEmployees = !searchData.employeesIds ?
+      sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
 
-  const groups = filteredEmployees.map(item => ({
-    id: item._id,
-    title: `${item.firstName} ${item.lastName}`,
-  }));
+    const groups = filteredEmployees.map(item => ({
+      id: item._id,
+      title: `${item.firstName} ${item.lastName}`,
+    }));
 
-  const filteredAllocations = !searchData.projectsIds ?
-    allocations : allocations.filter(item => searchData.projectsIds.includes(item.projectId));
+    const filteredAllocations = !searchData.projectsIds ?
+      allocations : allocations.filter(item => searchData.projectsIds.includes(item.projectId));
 
-  const items = filteredAllocations.map(item => ({
-    ...item,
-    id: item._id,
-    group: item.userId,
-    title: item.taskName,
-    start_time: moment(item.startTime),
-    end_time: moment(item.endTime),
-  }));
-  const dragSnap = 24 * 60 * 60 * 1000; // one day
-  const calendarZoom = 24 * 60 * 60 * 1000 * 30; // one month
+    const items = filteredAllocations.map(item => ({
+      ...item,
+      id: item._id,
+      group: item.userId,
+      title: item.taskName,
+      start_time: moment(item.startTime),
+      end_time: moment(item.endTime),
+    }));
+    const dragSnap = 60 * 60 * 1000; // one hour
 
-  return (
-    <Timeline
-      groups={groups}
-      items={items}
-      visibleTimeStart={moment().add(-12, 'days').valueOf()}
-      visibleTimeEnd={moment().add(12, 'days').valueOf()}
-      sidebarContent={<h2>Ralabs</h2>}
-      sidebarWidth={260}
-      dragSnap={dragSnap}
-      minResizeWidth={24}
-      lineHeight={100}
-      headerLabelGroupHeight={40}
-      headerLabelHeight={40}
-      itemHeightRatio={0.3}
-      minZoom={calendarZoom}
-      maxZoom={calendarZoom}
-      stackItems
-      canResize="both"
-      onItemMove={onItemMove}
-      onItemResize={onItemResize}
-      onItemSelect={onItemSelect}
-      onItemDoubleClick={onItemDoubleClick}
-      onCanvasDoubleClick={onCanvasDoubleClick}
-    />
-  );
-};
+    return (
+      <Timeline
+        groups={groups}
+        items={items}
+        visibleTimeStart={this.visibleTimeStart}
+        visibleTimeEnd={this.visibleTimeEnd}
+        sidebarContent={<h2>Ralabs</h2>}
+        sidebarWidth={260}
+        dragSnap={dragSnap}
+        minResizeWidth={24}
+        lineHeight={100}
+        headerLabelGroupHeight={40}
+        headerLabelHeight={40}
+        itemHeightRatio={0.3}
+        minZoom={minZoom}
+        maxZoom={maxZoom}
+        stackItems
+        canResize="both"
+        onItemMove={this.onItemMove}
+        onItemResize={this.onItemResize}
+        onItemSelect={this.onItemSelect}
+        onItemDoubleClick={this.onItemDoubleClick}
+        onCanvasClick={this.onCanvasClick}
+        onTimeChange={(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) => {
+          const { minTime, maxTime } = this.state;
+          let start;
+          let end;
+          if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
+            start = minTime;
+            end = maxTime;
+          } else if (visibleTimeStart < minTime) {
+            start = minTime;
+            end = minTime + (visibleTimeEnd - visibleTimeStart);
+          } else if (visibleTimeEnd > maxTime) {
+            start = maxTime - (visibleTimeEnd - visibleTimeStart);
+            end = maxTime;
+          } else {
+            start = visibleTimeStart;
+            end = visibleTimeEnd;
+          }
+          this.visibleTimeStart = start;
+          this.visibleTimeEnd = end;
+          updateScrollCanvas(start, end);
+        }}
+      />
+    );
+  }
+}
 
 TimelineCalendar.propTypes = {
   employees: PropTypes.array.isRequired, // eslint-disable-line

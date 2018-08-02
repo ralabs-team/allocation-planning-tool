@@ -24,6 +24,8 @@ module.exports = {
         "react/jsx-max-props-per-line": 1,
         "react/jsx-no-bind": 1,
         "jsx-a11y/anchor-is-valid": ["error", {}],
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "react/sort-comp": "off",
+        "class-methods-use-this": "off"
     }
 };

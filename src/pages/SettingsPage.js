@@ -2,7 +2,7 @@ import React from 'react';
 
 const SettingsPage = () => (
   <div>
-    <h1>There are user settings</h1>
+    <h1 style={{ textAlign: 'center' }}>There are user settings</h1>
   </div>
 );
 
