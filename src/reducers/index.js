@@ -6,6 +6,7 @@ import modals from './modals';
 import projects from './projects';
 import search from './search';
 import users from './users';
+import auth from './auth';
 
 const appReducer = combineReducers({
   allocations,
@@ -13,6 +14,7 @@ const appReducer = combineReducers({
   projects,
   search,
   users,
+  auth,
 });
 const rootReducer = (state, action) => appReducer(state, action);
 

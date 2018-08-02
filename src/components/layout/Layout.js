@@ -9,10 +9,10 @@ const Layout = (props) => {
   const childProps = _.clone(props);
 
   delete childProps.children;
-
+  delete childProps.renderSearch;
   return (
     <div className="layout">
-      <Header />
+      <Header renderSearch={props.renderSearch} />
 
       <Modal />
 
@@ -23,6 +23,10 @@ const Layout = (props) => {
 
 Layout.propTypes = {
   children: PropTypes.element.isRequired,
+  renderSearch: PropTypes.bool,
+};
+Layout.defaultProps = {
+  renderSearch: false,
 };
 
 export default Layout;

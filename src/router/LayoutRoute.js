@@ -12,7 +12,7 @@ const LayoutRoute = (props) => {
     routeProps.computedMatch = props.computedMatch;
 
     return (
-      <Layout {...routeProps} >
+      <Layout {...routeProps} renderSearch={props.renderSearch}>
         <RouteComponent />
       </Layout>
     );
@@ -26,6 +26,10 @@ const LayoutRoute = (props) => {
 LayoutRoute.propTypes = {
   component: PropTypes.func.isRequired, // eslint-disable-line
   computedMatch: PropTypes.object, // eslint-disable-line
+  renderSearch: PropTypes.bool, // eslint-disable-line
+};
+LayoutRoute.defaultProps = {
+  renderSearch: false,
 };
 
 export default LayoutRoute;
