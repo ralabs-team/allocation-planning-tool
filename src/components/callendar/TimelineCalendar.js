@@ -17,19 +17,42 @@ const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 const dragSnap = 60 * 60 * 1000 * 24; // day
 
 class TimelineCalendar extends React.Component {
-  state = {
-    minTime: moment().startOf('M').valueOf(),
-    maxTime: moment().endOf('M').valueOf(),
-  }
-
   constructor(props) {
     super(props);
     autoBind(this);
+
+    const { employees, searchData } = this.props;
+
+    this.state = {
+      minTime: moment().startOf('M').valueOf(),
+      maxTime: moment().endOf('M').valueOf(),
+      filteredEmployees: employees,
+      employeesIds: searchData.employeesIds, // eslint-disable-line
+    };
 
     const { minDate, maxDate } = getVisiblePeriod();
     this.visibleTimeStart = minDate.valueOf();
     this.visibleTimeEnd = maxDate.valueOf();
   }
+
+  static getDerivedStateFromProps(props, state) {
+    const newEmployeesIds = props.searchData.employeesIds;
+    const { employeesIds } = state;
+
+    if ((newEmployeesIds && (!employeesIds || newEmployeesIds.length !== employeesIds.length)) ||
+      (!newEmployeesIds && employeesIds)) {
+      const filteredEmployees = !newEmployeesIds ?
+        props.employees : props.employees.filter(item => newEmployeesIds.includes(item._id));
+
+      return {
+        employeesIds: newEmployeesIds,
+        filteredEmployees,
+      };
+    }
+
+    return null;
+  }
+
   changeAllocations(id, allocation) {
     const allocations = _.clone(this.props.allocations);
     const index = _.findIndex(this.props.allocations, ['_id', id]);
@@ -39,7 +62,7 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemMove(itemId, dragTime, newGroupIndex) {
-    const user = this.props.employees[newGroupIndex];
+    const user = this.state.filteredEmployees[newGroupIndex];
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
@@ -147,15 +170,12 @@ class TimelineCalendar extends React.Component {
 
   render() {
     const {
-      employees, allocations, searchData, sortUp,
+      allocations, searchData, sortUp,
     } = this.props;
+    const { filteredEmployees } = this.state;
+    const sortedEmployees = sortUp ? filteredEmployees : _.clone(filteredEmployees).reverse();
 
-    const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
-
-    const filteredEmployees = !searchData.employeesIds ?
-      sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
-
-    const groups = filteredEmployees.map(item => ({
+    const groups = sortedEmployees.map(item => ({
       id: item._id,
       title: `${item.firstName} ${item.lastName}`,
       position: item.position,
