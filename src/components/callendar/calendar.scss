@@ -38,6 +38,11 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
       }
       .title-task {
         font-size: 15px;
+        margin-bottom: 6px;
+      }
+      .icon {
+        transform: scale(-1, 1);
+        font-size: 16px;
       }
     }
   }

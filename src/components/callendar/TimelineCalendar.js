@@ -4,34 +4,14 @@ import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
-
+import CommentIcon from '@material-ui/icons/ModeComment';
 import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
+import { getVisiblePeriod } from './helpers';
 
 const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 const dragSnap = 60 * 60 * 1000 * 24; // day
-
-const getVisiblePeriod = () => {
-  const now = moment().startOf('d');
-  const start = moment(now).startOf('M');
-  const end = moment(now).endOf('M');
-  if (now.diff(start, 'd') <= 4) {
-    return {
-      minDate: start,
-      maxDate: moment(start).add(5, 'd'),
-    };
-  } else if (end.diff(now, 'd') <= 4) {
-    return {
-      minDate: moment(end).add(-5, 'd'),
-      maxDate: end,
-    };
-  }
-  return {
-    minDate: now,
-    maxDate: moment(now).add(5, 'd'),
-  };
-};
 
 class TimelineCalendar extends React.Component {
   state = {
@@ -147,6 +127,7 @@ class TimelineCalendar extends React.Component {
       <div>
         <div className="title-project">{item.projectTitle}</div>
         <p className="title-task">{item.taskTitle}</p>
+        {!!item.notes.length && <CommentIcon className="icon" />}
       </div>
     );
   }
