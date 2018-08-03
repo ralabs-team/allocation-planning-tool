@@ -20,3 +20,8 @@ export const getVisiblePeriod = () => {
     maxDate: moment(now).add(5, 'd'),
   };
 };
+
+export const isWeekend = (time) => {
+  const day = moment(time).weekday();
+  return day === 5 || day === 6;
+};
