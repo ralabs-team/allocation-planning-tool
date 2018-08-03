@@ -6,6 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 // components
 import AllocationForm from './AllocationForm';
+import ProjectForm from './ProjectForm';
 // actions
 import { hideModal, addAllocation, changeAllocations } from '../../../actions';
 // styles
@@ -18,8 +19,10 @@ const Modals = (props) => {
     switch (type) {
       case 'ALLOCATION':
         return <AllocationForm {...props} />;
+      case 'PROJECT':
+        return <ProjectForm {...props} />;
       default:
-        return <AllocationForm {...props} />;
+        return <h3>Something Went Wrong</h3>;
     }
   };
 
@@ -54,6 +57,7 @@ const mapStateToProps = state => ({
   modalsData: state.modals,
   projects: state.projects.allProjects,
   allocations: state.allocations.allAllocations,
+  employees: state.users.allUsers,
 });
 
 const mapDispatchToProps = dispatch => ({

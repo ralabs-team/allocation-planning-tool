@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 // material-ui
 import List from '@material-ui/core/List';
@@ -9,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
 // actions
-import { getProjects } from '../actions';
+import { getProjects, openModal } from '../actions';
 
 class ProjectsPage extends Component {
   static propTypes = {
@@ -17,10 +18,23 @@ class ProjectsPage extends Component {
     projects: PropTypes.arrayOf(PropTypes.object).isRequired,
     searchData: PropTypes.objectOf(PropTypes.array).isRequired,
     sortUp: PropTypes.bool.isRequired,
+    openModal: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
     this.props.getProjects();
+  }
+
+  onItemClick(id) {
+    const modalData = {
+      type: 'PROJECT',
+      mode: 'edit',
+      data: {
+        project: _.find(this.props.projects, ['_id', id]),
+      },
+    };
+
+    this.props.openModal(modalData);
   }
 
   renderProjectsList() {
@@ -37,6 +51,7 @@ class ProjectsPage extends Component {
           <ListItem
             key={_id}
             classes={{ root: 'list-item' }}
+            onClick={() => this.onItemClick(_id)}
           >
             <ListItemText
               primary={title}
@@ -68,6 +83,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getProjects: () => { dispatch(getProjects()); },
+  openModal: bindActionCreators(openModal, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectsPage);

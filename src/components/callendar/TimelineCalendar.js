@@ -2,25 +2,54 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline/lib';
-import 'react-calendar-timeline/lib/Timeline.css';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
+import CommentIcon from '@material-ui/icons/ModeComment';
+import 'react-calendar-timeline/lib/Timeline.css';
+import './calendar.css';
+import { getVisiblePeriod } from './helpers';
 
-const minZoom = 1000 * 60 * 60 * 24; // day
+const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
+const dragSnap = 60 * 60 * 1000 * 24; // day
 
 class TimelineCalendar extends React.Component {
-  state = {
-    minTime: moment().startOf('M').valueOf(),
-    maxTime: moment().endOf('M').valueOf(),
-  }
-  visibleTimeStart = moment().startOf('w').valueOf();
-  visibleTimeEnd = moment().endOf('w').valueOf();
-
   constructor(props) {
     super(props);
     autoBind(this);
+
+    const { employees, searchData } = this.props;
+
+    this.state = {
+      minTime: moment().startOf('M').valueOf(),
+      maxTime: moment().endOf('M').valueOf(),
+      filteredEmployees: employees,
+      employeesIds: searchData.employeesIds, // eslint-disable-line
+    };
+
+    const { minDate, maxDate } = getVisiblePeriod();
+    this.visibleTimeStart = minDate.valueOf();
+    this.visibleTimeEnd = maxDate.valueOf();
   }
+
+  static getDerivedStateFromProps(props, state) {
+    const newEmployeesIds = props.searchData.employeesIds;
+    const { employeesIds } = state;
+
+    if ((newEmployeesIds && (!employeesIds || newEmployeesIds.length !== employeesIds.length)) ||
+      (!newEmployeesIds && employeesIds)) {
+      const filteredEmployees = !newEmployeesIds ?
+        props.employees : props.employees.filter(item => newEmployeesIds.includes(item._id));
+
+      return {
+        employeesIds: newEmployeesIds,
+        filteredEmployees,
+      };
+    }
+
+    return null;
+  }
+
   changeAllocations(id, allocation) {
     const allocations = _.clone(this.props.allocations);
     const index = _.findIndex(this.props.allocations, ['_id', id]);
@@ -30,7 +59,7 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemMove(itemId, dragTime, newGroupIndex) {
-    const user = this.props.employees[newGroupIndex];
+    const user = this.state.filteredEmployees[newGroupIndex];
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
@@ -81,7 +110,6 @@ class TimelineCalendar extends React.Component {
   }
 
   onCanvasClick(group, time) {
-    console.log(moment(time).format('DD-MM'), group);
     const modalData = {
       type: 'ALLOCATION',
       mode: 'create',
@@ -95,17 +123,46 @@ class TimelineCalendar extends React.Component {
     this.props.openModal(modalData);
   }
 
+  onTimeChange(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) {
+    const { minTime, maxTime } = this.state;
+    let start;
+    let end;
+    if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
+      start = minTime;
+      end = maxTime;
+    } else if (visibleTimeStart < minTime) {
+      start = minTime;
+      end = minTime + (visibleTimeEnd - visibleTimeStart);
+    } else if (visibleTimeEnd > maxTime) {
+      start = maxTime - (visibleTimeEnd - visibleTimeStart);
+      end = maxTime;
+    } else {
+      start = visibleTimeStart;
+      end = visibleTimeEnd;
+    }
+    this.visibleTimeStart = start;
+    this.visibleTimeEnd = end;
+    updateScrollCanvas(start, end);
+  }
+
+  itemRenderer({ item }) {
+    return (
+      <div>
+        <div className="title-project">{item.projectTitle}</div>
+        <p className="title-task">{item.taskTitle}</p>
+        {!!item.notes.length && <CommentIcon className="icon" />}
+      </div>
+    );
+  }
+
   render() {
     const {
-      employees, allocations, searchData, sortUp,
+      allocations, searchData, sortUp,
     } = this.props;
+    const { filteredEmployees } = this.state;
+    const sortedEmployees = sortUp ? filteredEmployees : _.clone(filteredEmployees).reverse();
 
-    const sortedEmployees = sortUp ? employees : _.clone(employees).reverse();
-
-    const filteredEmployees = !searchData.employeesIds ?
-      sortedEmployees : sortedEmployees.filter(item => searchData.employeesIds.includes(item._id));
-
-    const groups = filteredEmployees.map(item => ({
+    const groups = sortedEmployees.map(item => ({
       id: item._id,
       title: `${item.firstName} ${item.lastName}`,
     }));
@@ -121,7 +178,6 @@ class TimelineCalendar extends React.Component {
       start_time: moment(item.startTime),
       end_time: moment(item.endTime),
     }));
-    const dragSnap = 60 * 60 * 1000; // one hour
 
     return (
       <Timeline
@@ -131,42 +187,23 @@ class TimelineCalendar extends React.Component {
         visibleTimeEnd={this.visibleTimeEnd}
         sidebarContent={<h2>Ralabs</h2>}
         sidebarWidth={260}
-        dragSnap={dragSnap}
         minResizeWidth={24}
         lineHeight={100}
         headerLabelGroupHeight={40}
         headerLabelHeight={40}
-        itemHeightRatio={0.3}
+        itemHeightRatio={0.97}
         minZoom={minZoom}
         maxZoom={maxZoom}
-        stackItems
+        dragSnap={dragSnap}
         canResize="both"
+        stackItems
         onItemMove={this.onItemMove}
         onItemResize={this.onItemResize}
         onItemSelect={this.onItemSelect}
         onItemDoubleClick={this.onItemDoubleClick}
         onCanvasClick={this.onCanvasClick}
-        onTimeChange={(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) => {
-          const { minTime, maxTime } = this.state;
-          let start;
-          let end;
-          if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
-            start = minTime;
-            end = maxTime;
-          } else if (visibleTimeStart < minTime) {
-            start = minTime;
-            end = minTime + (visibleTimeEnd - visibleTimeStart);
-          } else if (visibleTimeEnd > maxTime) {
-            start = maxTime - (visibleTimeEnd - visibleTimeStart);
-            end = maxTime;
-          } else {
-            start = visibleTimeStart;
-            end = visibleTimeEnd;
-          }
-          this.visibleTimeStart = start;
-          this.visibleTimeEnd = end;
-          updateScrollCanvas(start, end);
-        }}
+        onTimeChange={this.onTimeChange}
+        itemRenderer={this.itemRenderer}
       />
     );
   }

@@ -26,6 +26,7 @@ module.exports = {
         "jsx-a11y/anchor-is-valid": ["error", {}],
         "no-underscore-dangle": "off",
         "react/sort-comp": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "import/prefer-default-export": "off",
     }
 };

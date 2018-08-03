@@ -7,25 +7,21 @@ import PropTypes from 'prop-types';
 import TimelineCalendar from '../components/callendar/TimelineCalendar';
 
 // actions
-import { getUsers, getAllocations, openModal, getProjects, changeAllocations } from '../actions';
+import { getAllocations, openModal, changeAllocations } from '../actions';
 
 class DashboardPage extends Component {
   static propTypes = {
-    getUsers: PropTypes.func.isRequired,
     getAllocations: PropTypes.func.isRequired,
-    getProjects: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
-    allocations: PropTypes.array.isRequired, // eslint-disable-line
-    users: PropTypes.array.isRequired, // eslint-disable-line
+    allocations: PropTypes.arrayOf(PropTypes.object).isRequired,
+    users: PropTypes.arrayOf(PropTypes.object).isRequired,
     changeAllocations: PropTypes.func.isRequired,
     searchData: PropTypes.object.isRequired, // eslint-disable-line
     sortUp: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
-    this.props.getUsers();
     this.props.getAllocations();
-    this.props.getProjects();
   }
 
   render() {
@@ -63,10 +59,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getUsers: bindActionCreators(getUsers, dispatch),
   getAllocations: bindActionCreators(getAllocations, dispatch),
   openModal: bindActionCreators(openModal, dispatch),
-  getProjects: bindActionCreators(getProjects, dispatch),
   changeAllocations: bindActionCreators(changeAllocations, dispatch),
 });
 
