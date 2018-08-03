@@ -184,7 +184,7 @@ class AllocationForm extends Component {
 
     return (
       <div>
-        <div className="modal-content">
+        <div className="modal-content allocation">
           <div className="modal-content__allocation-info">
             <div className="field-wrapper">
               <CardHeader

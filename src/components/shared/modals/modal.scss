@@ -5,13 +5,16 @@
   }
 
   .modal-content {
-    display: flex;
-    justify-content: space-between;
     min-width: 320px;
     width: 720px;
     min-height: 450px;
     margin-bottom: 20px;
     border: 1px solid #d8d8d8;
+    &.allocation {
+      display: flex;
+      justify-content: space-between;
+    }
+
     .modal-content__allocation-info {
       width: 460px;
       padding: 30px;

@@ -24,7 +24,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 
 import SearchPanel from './SearchPanel';
-import { setSearch, reverseSort, logOut } from '../../../actions';
+// actions
+import { getUsers, getProjects, setSearch, reverseSort, logOut } from '../../../actions';
 
 import './header.css';
 
@@ -59,6 +60,12 @@ class Header extends React.Component {
   state = {
     anchorEl: null,
   }
+
+  componentDidMount() {
+    this.props.getUsers();
+    this.props.getProjects();
+  }
+
   renderLoggedInButtons() {
     const { classes, page } = this.props;
     const { anchorEl } = this.state;
@@ -169,11 +176,13 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-  classes: PropTypes.object.isRequired, // eslint-disable-line
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   renderSearch: PropTypes.bool.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   logOut: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  getProjects: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -188,6 +197,8 @@ const mapDispatchToProps = dispatch => ({
   setSearch: bindActionCreators(setSearch, dispatch),
   reverseSort: () => dispatch(reverseSort()),
   logOut: () => dispatch(logOut()),
+  getUsers: bindActionCreators(getUsers, dispatch),
+  getProjects: bindActionCreators(getProjects, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Header));
