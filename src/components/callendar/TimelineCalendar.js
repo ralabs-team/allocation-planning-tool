@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Timeline from 'react-calendar-timeline/lib';
+import Timeline, {
+  TimelineMarkers,
+  TodayMarker,
+} from 'react-calendar-timeline/lib';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 import CommentIcon from '@material-ui/icons/ModeComment';
@@ -184,11 +187,16 @@ class TimelineCalendar extends React.Component {
         onCanvasClick={this.onCanvasClick}
         onTimeChange={this.onTimeChange}
         itemRenderer={this.itemRenderer}
-      />
+      >
+        <TimelineMarkers>
+          <TodayMarker>
+            {({ styles }) => <div style={{ left: styles.left }} className="today-marker" />}
+          </TodayMarker>
+        </TimelineMarkers>
+      </Timeline>
     );
   }
 }
-
 TimelineCalendar.propTypes = {
   employees: PropTypes.arrayOf(PropTypes.object).isRequired,
   allocations: PropTypes.arrayOf(PropTypes.object).isRequired,

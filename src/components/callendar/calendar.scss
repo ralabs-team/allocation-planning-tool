@@ -46,4 +46,13 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
       }
     }
   }
+  .today-marker {
+    position: absolute;
+    pointer-events: none;
+    background-color: #4443BB;
+    bottom: 0;
+    top: 0;
+    width: 2.5px;
+    opacity: 0.3;
+  }
 }
