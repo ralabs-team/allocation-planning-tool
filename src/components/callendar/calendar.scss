@@ -2,13 +2,26 @@
 @mixin ITEM_FONT {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
+@mixin STRIPED_BACKGROUND {
+  $striped-opacity: 0.3;
+  $striped-color: rgb(223, 221, 221);
+
+  background: rgba(white, $striped-opacity)  !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba($striped-color, $striped-opacity),
+    rgba($striped-color, $striped-opacity) 2px,
+    transparent 0,
+    transparent 4px
+  ) !important;
+}
+
 $item-color: rgba(0, 143, 251, 0.9);
 $item-color_selected: rgba(0, 143, 251, 0.65);
 
 $item-border-size: 2.5px;
 $item-border: $item-border-size solid rgba(0, 0, 0, 0.5);
 $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
-
 
 .react-calendar-timeline {
   .rct-item {
@@ -54,5 +67,16 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     top: 0;
     width: 2.5px;
     opacity: 0.3;
+  }
+  .rct-sidebar-row {
+    background-color: #F2F7FA !important;
+  }
+  .rct-horizontal-lines * {
+    background: white !important;
+  }
+  .rct-vertical-lines {
+    .rct-day-6, .rct-day-0 {
+      @include STRIPED_BACKGROUND;
+    }
   }
 }
