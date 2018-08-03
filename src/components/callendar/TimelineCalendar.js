@@ -134,6 +134,16 @@ class TimelineCalendar extends React.Component {
       </div>
     );
   }
+  groupRenderer({ group }) {
+    return (
+      <div className="group-item">
+        <span className="name">{group.title}</span>
+        {group.position &&
+          <span className="position">{group.position}</span>
+        }
+      </div>
+    );
+  }
 
   render() {
     const {
@@ -148,6 +158,7 @@ class TimelineCalendar extends React.Component {
     const groups = filteredEmployees.map(item => ({
       id: item._id,
       title: `${item.firstName} ${item.lastName}`,
+      position: item.position,
     }));
 
     const filteredAllocations = !searchData.projectsIds ?
@@ -187,6 +198,7 @@ class TimelineCalendar extends React.Component {
         onCanvasClick={this.onCanvasClick}
         onTimeChange={this.onTimeChange}
         itemRenderer={this.itemRenderer}
+        groupRenderer={this.groupRenderer}
       >
         <TimelineMarkers>
           <TodayMarker>

@@ -1,6 +1,6 @@
 // calendar component
 @mixin ITEM_FONT {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 @mixin STRIPED_BACKGROUND {
   $striped-opacity: 0.3;
@@ -59,6 +59,22 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
       }
     }
   }
+  .group-item {
+    @include ITEM_FONT;
+    line-height: 20px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    .name {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .position {
+      font-size: 13px;
+      color: #9DA6AB;
+    }
+  }
   .today-marker {
     position: absolute;
     pointer-events: none;
@@ -69,7 +85,11 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     opacity: 0.3;
   }
   .rct-sidebar-row {
+    cursor: pointer;
     background-color: #F2F7FA !important;
+    &:hover {
+      background-color: white !important;
+    }
   }
   .rct-horizontal-lines * {
     background: white !important;
