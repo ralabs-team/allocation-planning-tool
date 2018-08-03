@@ -202,10 +202,10 @@ class TimelineCalendar extends React.Component {
         sidebarContent={<h2>Ralabs</h2>}
         sidebarWidth={260}
         minResizeWidth={24}
-        lineHeight={100}
         headerLabelGroupHeight={40}
         headerLabelHeight={40}
         itemHeightRatio={0.97}
+        lineHeight={140}
         minZoom={minZoom}
         maxZoom={maxZoom}
         dragSnap={dragSnap}
