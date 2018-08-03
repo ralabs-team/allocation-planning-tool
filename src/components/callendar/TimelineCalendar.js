@@ -10,7 +10,7 @@ import autoBind from 'react-autobind';
 import CommentIcon from '@material-ui/icons/ModeComment';
 import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
-import { getVisiblePeriod } from './helpers';
+import { getVisiblePeriod, isWeekend } from './helpers';
 
 const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
@@ -62,12 +62,17 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemMove(itemId, dragTime, newGroupIndex) {
-    const user = this.state.filteredEmployees[newGroupIndex];
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
+    const startTime = new Date(dragTime);
+    const endTime = new Date(dragTime + (allocation.endTime - allocation.startTime));
+    console.log(startTime, endTime);
+    if (isWeekend(startTime) || isWeekend(endTime)) return;
+
+    const user = this.state.filteredEmployees[newGroupIndex];
     const updatedAllocation = {
       ...allocation,
-      startTime: new Date(dragTime),
-      endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
+      startTime,
+      endTime,
       userId: user._id,
       updateAt: new Date(),
       updateBy: '001',
@@ -92,7 +97,7 @@ class TimelineCalendar extends React.Component {
   onItemSelect(itemId, e, time) {
     console.log('itemId ', itemId);
     console.log('e ', e);
-    console.log('time ', time);
+    console.log('time ', moment(time).toDate().toString());
   }
 
   onItemDoubleClick(itemId) {
