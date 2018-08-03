@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Timeline from 'react-calendar-timeline/lib';
+import Timeline, {
+  TimelineMarkers,
+  TodayMarker,
+} from 'react-calendar-timeline/lib';
 import _ from 'lodash';
 import autoBind from 'react-autobind';
 import CommentIcon from '@material-ui/icons/ModeComment';
 import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
-import { getVisiblePeriod } from './helpers';
+import { getVisiblePeriod, isWeekend } from './helpers';
 
 const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
@@ -59,12 +62,16 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemMove(itemId, dragTime, newGroupIndex) {
-    const user = this.state.filteredEmployees[newGroupIndex];
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
+    const startTime = new Date(dragTime);
+    const endTime = new Date(dragTime + (allocation.endTime - allocation.startTime));
+    if (isWeekend(startTime) || isWeekend(endTime)) return;
+
+    const user = this.state.filteredEmployees[newGroupIndex];
     const updatedAllocation = {
       ...allocation,
-      startTime: new Date(dragTime),
-      endTime: new Date(dragTime + (allocation.endTime - allocation.startTime)),
+      startTime,
+      endTime,
       userId: user._id,
       updateAt: new Date(),
       updateBy: '001',
@@ -89,7 +96,7 @@ class TimelineCalendar extends React.Component {
   onItemSelect(itemId, e, time) {
     console.log('itemId ', itemId);
     console.log('e ', e);
-    console.log('time ', time);
+    console.log('time ', moment(time).toDate().toString());
   }
 
   onItemDoubleClick(itemId) {
@@ -154,6 +161,16 @@ class TimelineCalendar extends React.Component {
       </div>
     );
   }
+  groupRenderer({ group }) {
+    return (
+      <div className="group-item">
+        <span className="name">{group.title}</span>
+        {group.position &&
+          <span className="position">{group.position}</span>
+        }
+      </div>
+    );
+  }
 
   render() {
     const {
@@ -165,6 +182,7 @@ class TimelineCalendar extends React.Component {
     const groups = sortedEmployees.map(item => ({
       id: item._id,
       title: `${item.firstName} ${item.lastName}`,
+      position: item.position,
     }));
 
     const filteredAllocations = !searchData.projectsIds ?
@@ -188,10 +206,10 @@ class TimelineCalendar extends React.Component {
         sidebarContent={<h2>Ralabs</h2>}
         sidebarWidth={260}
         minResizeWidth={24}
-        lineHeight={100}
         headerLabelGroupHeight={40}
         headerLabelHeight={40}
         itemHeightRatio={0.97}
+        lineHeight={140}
         minZoom={minZoom}
         maxZoom={maxZoom}
         dragSnap={dragSnap}
@@ -204,11 +222,17 @@ class TimelineCalendar extends React.Component {
         onCanvasClick={this.onCanvasClick}
         onTimeChange={this.onTimeChange}
         itemRenderer={this.itemRenderer}
-      />
+        groupRenderer={this.groupRenderer}
+      >
+        <TimelineMarkers>
+          <TodayMarker>
+            {({ styles }) => <div style={{ left: styles.left }} className="today-marker" />}
+          </TodayMarker>
+        </TimelineMarkers>
+      </Timeline>
     );
   }
 }
-
 TimelineCalendar.propTypes = {
   employees: PropTypes.arrayOf(PropTypes.object).isRequired,
   allocations: PropTypes.arrayOf(PropTypes.object).isRequired,
