@@ -170,15 +170,42 @@ class TimelineCalendar extends React.Component {
   }
 
   // calendar renderers
-  itemRenderer({ item }) {
+  itemRenderer({
+    item,
+    itemContext,
+    getItemProps,
+    getResizeProps,
+  }) {
+    const { left: leftResizeProps, right: rightResizeProps } = getResizeProps();
+    const { selected } = itemContext;
+    const itemProps = getItemProps(item);
+    const {
+      top,
+      left,
+      width,
+      height,
+    } = itemProps.style;
+    itemProps.style = {
+      top,
+      left,
+      width,
+      height,
+    };
     return (
-      <div>
+      <div
+        {...itemProps}
+        className={`rct-item ${selected ? 'selected' : ''}`}
+      >
         <div className="title-project">{item.projectTitle}</div>
         <p className="title-task">{item.taskTitle}</p>
         {!!item.notes.length && <CommentIcon className="icon" />}
+
+        <div {...leftResizeProps} className="resizer" />
+        <div {...rightResizeProps} className="resizer" />
       </div>
     );
   }
+
   groupRenderer({ group }) {
     return (
       <div className="group-item">
@@ -242,6 +269,7 @@ class TimelineCalendar extends React.Component {
           onTimeChange={this.onTimeChange}
           itemRenderer={this.itemRenderer}
           groupRenderer={this.groupRenderer}
+          useResizeHandle
         >
           <TimelineMarkers>
             <TodayMarker>

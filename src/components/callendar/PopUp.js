@@ -6,7 +6,6 @@ import Dialog from '@material-ui/core/Dialog';
 
 const PopUp = (props) => {
   const {
-    classes,
     onClose,
     onAgree,
     data,
@@ -43,11 +42,9 @@ const PopUp = (props) => {
 };
 
 PopUp.propTypes = {
-  classes: PropTypes.object.isRequired, // eslint-disable-line
   data: PropTypes.object.isRequired, // eslint-disable-line
   onAgree: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
 export default PopUp;
-
