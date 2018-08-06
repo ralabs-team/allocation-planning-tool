@@ -86,6 +86,8 @@ class TimelineCalendar extends React.Component {
   onItemResize(itemId, time, edge) {
     const changedTime = edge === 'right' ? 'endTime' : 'startTime';
     const correctedTime = changedTime === 'endTime' ? time : (time + 60 * 1000);
+    if (isWeekend(correctedTime)) return;
+
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
