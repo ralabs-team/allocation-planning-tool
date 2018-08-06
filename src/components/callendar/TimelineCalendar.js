@@ -68,7 +68,6 @@ class TimelineCalendar extends React.Component {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const startTime = new Date(dragTime);
     const endTime = new Date(dragTime + (allocation.endTime - allocation.startTime));
-    // console.log(moment(startTime).format("dd:hh:ss"), moment(endTime).format("dd:hh:ss"));
     if (isWeekend(startTime) || isWeekend(endTime)) return;
 
     const user = this.state.filteredEmployees[newGroupIndex];
@@ -85,17 +84,16 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemResize(itemId, time, edge) {
-    // debugger
     const changedTime = edge === 'right' ? 'endTime' : 'startTime';
+    const correctedTime = changedTime === 'endTime' ? time : (time + 60 * 1000);
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
       ...allocation,
-      [changedTime]: new Date(time),
+      [changedTime]: new Date(correctedTime),
       updateAt: new Date(),
       updateBy: '001',
     };
-    // console.log(updatedAllocation.startTime, updatedAllocation.endTime);
-    // console.log(new Date(time))
+
     this.changeAllocations(itemId, updatedAllocation);
   }
 

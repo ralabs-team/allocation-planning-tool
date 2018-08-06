@@ -23,5 +23,5 @@ export const getVisiblePeriod = () => {
 
 export const isWeekend = (time) => {
   const day = moment(time).weekday();
-  return day === 5 || day === 6;
+  return day === 0 || day === 6;
 };
