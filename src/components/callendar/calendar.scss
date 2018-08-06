@@ -133,3 +133,30 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     }
   }
 }
+
+.calendar-popup {
+  padding: 5px !important;
+  .buttons-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+    margin-bottom: 10px;
+    .button {
+     width: 89px;
+      &.green {
+        background-color: #4caf50;
+        color: #ffffff;
+        &:hover {
+          background-color: #207324;
+        }
+      }
+      &.purple {
+        background-color: #194f7d;
+        color: #ffffff;
+        &:hover {
+          background-color: #1b3b56;
+        }
+      }
+    }
+  }
+}

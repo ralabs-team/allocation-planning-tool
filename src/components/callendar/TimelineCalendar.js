@@ -12,6 +12,7 @@ import CommentIcon from '@material-ui/icons/ModeComment';
 import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
 import { getVisiblePeriod, isWeekend } from './helpers';
+import PopUp from './PopUp';
 
 moment.locale('en-gb');
 
@@ -31,6 +32,8 @@ class TimelineCalendar extends React.Component {
       maxTime: moment().endOf('M').valueOf(),
       filteredEmployees: employees,
       employeesIds: searchData.employeesIds, // eslint-disable-line
+      isOpenPopup: false,
+      popupData: {},
     };
 
     const { minDate, maxDate } = getVisiblePeriod();
@@ -55,6 +58,19 @@ class TimelineCalendar extends React.Component {
 
     return null;
   }
+  openNewAllocationModal(group, time) {
+    const modalData = {
+      type: 'ALLOCATION',
+      mode: 'create',
+      data: {
+        employee: _.find(this.props.employees, ['_id', group]),
+        initialTime: time,
+        allocation: null,
+      },
+    };
+
+    this.props.openModal(modalData);
+  }
 
   changeAllocations(id, allocation) {
     const allocations = _.clone(this.props.allocations);
@@ -64,6 +80,7 @@ class TimelineCalendar extends React.Component {
     this.props.changeAllocations(allocations);
   }
 
+  // calendar handlers
   onItemMove(itemId, dragTime, newGroupIndex) {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const startTime = new Date(dragTime);
@@ -99,12 +116,6 @@ class TimelineCalendar extends React.Component {
     this.changeAllocations(itemId, updatedAllocation);
   }
 
-  // onItemSelect(itemId, e, time) {
-  //   console.log('itemId ', itemId);
-  //   console.log('e ', e);
-  //   console.log('time ', moment(time).toDate().toString());
-  // }
-
   onItemDoubleClick(itemId) {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const employee = _.find(this.props.employees, ['_id', allocation.userId]);
@@ -123,17 +134,17 @@ class TimelineCalendar extends React.Component {
   }
 
   onCanvasClick(group, time) {
-    const modalData = {
-      type: 'ALLOCATION',
-      mode: 'create',
-      data: {
-        employee: _.find(this.props.employees, ['_id', group]),
-        initialTime: time,
-        allocation: null,
-      },
-    };
-
-    this.props.openModal(modalData);
+    if (!isWeekend(time)) {
+      this.openNewAllocationModal(group, time);
+    } else {
+      this.setState({
+        isOpenPopup: true,
+        popupData: {
+          group,
+          time,
+        },
+      });
+    }
   }
 
   onTimeChange(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) {
@@ -158,6 +169,7 @@ class TimelineCalendar extends React.Component {
     updateScrollCanvas(start, end);
   }
 
+  // calendar renderers
   itemRenderer({ item }) {
     return (
       <div>
@@ -204,38 +216,47 @@ class TimelineCalendar extends React.Component {
     }));
 
     return (
-      <Timeline
-        groups={groups}
-        items={items}
-        visibleTimeStart={this.visibleTimeStart}
-        visibleTimeEnd={this.visibleTimeEnd}
-        sidebarContent={<h2>Ralabs</h2>}
-        sidebarWidth={260}
-        minResizeWidth={24}
-        headerLabelGroupHeight={40}
-        headerLabelHeight={40}
-        itemHeightRatio={0.97}
-        lineHeight={140}
-        minZoom={minZoom}
-        maxZoom={maxZoom}
-        dragSnap={dragSnap}
-        canResize="both"
-        stackItems
-        onItemMove={this.onItemMove}
-        onItemResize={this.onItemResize}
-        onItemSelect={this.onItemSelect}
-        onItemDoubleClick={this.onItemDoubleClick}
-        onCanvasClick={this.onCanvasClick}
-        onTimeChange={this.onTimeChange}
-        itemRenderer={this.itemRenderer}
-        groupRenderer={this.groupRenderer}
-      >
-        <TimelineMarkers>
-          <TodayMarker>
-            {({ styles }) => <div style={{ left: styles.left }} className="today-marker" />}
-          </TodayMarker>
-        </TimelineMarkers>
-      </Timeline>
+      <div>
+        <Timeline
+          groups={groups}
+          items={items}
+          visibleTimeStart={this.visibleTimeStart}
+          visibleTimeEnd={this.visibleTimeEnd}
+          sidebarContent={<h2>Ralabs</h2>}
+          sidebarWidth={260}
+          minResizeWidth={24}
+          headerLabelGroupHeight={40}
+          headerLabelHeight={40}
+          itemHeightRatio={0.97}
+          lineHeight={140}
+          minZoom={minZoom}
+          maxZoom={maxZoom}
+          dragSnap={dragSnap}
+          canResize="both"
+          stackItems
+          onItemMove={this.onItemMove}
+          onItemResize={this.onItemResize}
+          onItemSelect={this.onItemSelect}
+          onItemDoubleClick={this.onItemDoubleClick}
+          onCanvasClick={this.onCanvasClick}
+          onTimeChange={this.onTimeChange}
+          itemRenderer={this.itemRenderer}
+          groupRenderer={this.groupRenderer}
+        >
+          <TimelineMarkers>
+            <TodayMarker>
+              {({ styles }) => <div style={{ left: styles.left }} className="today-marker" />}
+            </TodayMarker>
+          </TimelineMarkers>
+        </Timeline>
+        <PopUp
+          className="calendar-popup"
+          open={this.state.isOpenPopup}
+          onClose={() => this.setState({ isOpenPopup: false })}
+          onAgree={this.openNewAllocationModal}
+          data={this.state.popupData}
+        />
+      </div>
     );
   }
 }
