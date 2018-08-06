@@ -3,8 +3,8 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 @mixin STRIPED_BACKGROUND {
-  $striped-opacity: 0.3;
-  $striped-color: rgb(223, 221, 221);
+  $striped-opacity: 0.7;
+  $striped-color: rgb(238, 235, 235);
 
   background: rgba(white, $striped-opacity)  !important;
   background-image: repeating-linear-gradient(
@@ -31,6 +31,7 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     border: $item-border;
     background-color: $item-color;
     padding: 5px 2px 5px 2px;
+    z-index: 80 !important;
 
     line-height: normal !important;
     border-bottom: none !important;
@@ -38,6 +39,7 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     &.selected {
       background-color: $item-color_selected;
       border: $item-border_selected;
+      z-index: 82 !important;
     }
     .rct-item-content {
       & * {
@@ -116,13 +118,18 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
       background-color: white !important;
     }
   }
-  .rct-horizontal-lines * {
-    background: white !important;
+  .rct-horizontal-lines {
+    z-index: 81 !important;
+    & * {
+      background: transparent !important;
+    }
   }
   .rct-vertical-lines {
     // weekends
     .rct-day-6, .rct-day-0 {
       @include STRIPED_BACKGROUND;
+      z-index: 80 !important;
+      padding-right: 0 !important;
     }
   }
 }
