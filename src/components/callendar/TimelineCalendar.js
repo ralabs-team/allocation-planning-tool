@@ -65,7 +65,7 @@ class TimelineCalendar extends React.Component {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const startTime = new Date(dragTime);
     const endTime = new Date(dragTime + (allocation.endTime - allocation.startTime));
-    console.log(startTime, endTime);
+    // console.log(startTime, endTime);
     if (isWeekend(startTime) || isWeekend(endTime)) return;
 
     const user = this.state.filteredEmployees[newGroupIndex];
