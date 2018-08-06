@@ -90,7 +90,7 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     .rct-label {
       background: white !important;
       &:hover {
-        background: rgba($main-color, 0.4) !important;
+        background: lighten($main-color, 2) !important;
       }
     }
     // header with month
@@ -99,7 +99,7 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
       background: $main-color;
       border-top: 1px solid #bbb;
       &:hover {
-        background: rgba($main-color, 0.6);
+        background: lighten($main-color, 1.4);
       }
     }
   }
