@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import 'moment/locale/uk';
 import Timeline, {
   TimelineMarkers,
   TodayMarker,
@@ -11,6 +12,8 @@ import CommentIcon from '@material-ui/icons/ModeComment';
 import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
 import { getVisiblePeriod, isWeekend } from './helpers';
+
+moment.locale('en-gb');
 
 const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
@@ -65,7 +68,7 @@ class TimelineCalendar extends React.Component {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const startTime = new Date(dragTime);
     const endTime = new Date(dragTime + (allocation.endTime - allocation.startTime));
-    // console.log(startTime, endTime);
+    // console.log(moment(startTime).format("dd:hh:ss"), moment(endTime).format("dd:hh:ss"));
     if (isWeekend(startTime) || isWeekend(endTime)) return;
 
     const user = this.state.filteredEmployees[newGroupIndex];
@@ -82,6 +85,7 @@ class TimelineCalendar extends React.Component {
   }
 
   onItemResize(itemId, time, edge) {
+    // debugger
     const changedTime = edge === 'right' ? 'endTime' : 'startTime';
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
     const updatedAllocation = {
@@ -90,15 +94,16 @@ class TimelineCalendar extends React.Component {
       updateAt: new Date(),
       updateBy: '001',
     };
-
+    // console.log(updatedAllocation.startTime, updatedAllocation.endTime);
+    // console.log(new Date(time))
     this.changeAllocations(itemId, updatedAllocation);
   }
 
-  onItemSelect(itemId, e, time) {
-    console.log('itemId ', itemId);
-    console.log('e ', e);
-    console.log('time ', moment(time).toDate().toString());
-  }
+  // onItemSelect(itemId, e, time) {
+  //   console.log('itemId ', itemId);
+  //   console.log('e ', e);
+  //   console.log('time ', moment(time).toDate().toString());
+  // }
 
   onItemDoubleClick(itemId) {
     const allocation = _.find(this.props.allocations, ['_id', itemId]);
