@@ -13,6 +13,7 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
 import { getVisiblePeriod, isWeekend } from './helpers';
 import PopUp from './PopUp';
+import logo from './icon.png';
 
 moment.locale('en-gb');
 
@@ -250,7 +251,7 @@ class TimelineCalendar extends React.Component {
           items={items}
           visibleTimeStart={this.visibleTimeStart}
           visibleTimeEnd={this.visibleTimeEnd}
-          sidebarContent={<h2>Ralabs</h2>}
+          sidebarContent={<img src={logo} alt="logo" />}
           sidebarWidth={260}
           minResizeWidth={24}
           headerLabelGroupHeight={40}

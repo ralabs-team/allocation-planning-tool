@@ -122,6 +122,13 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
     background: white;
     color: black;
     border-top: 1px solid #bbb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      position: absolute;
+      pointer-events: none;
+    }
   }
   // groups: people and projects
   .rct-sidebar-row {
