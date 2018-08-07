@@ -179,6 +179,7 @@ class TimelineCalendar extends React.Component {
     const { left: leftResizeProps, right: rightResizeProps } = getResizeProps();
     const { selected } = itemContext;
     const itemProps = getItemProps(item);
+    const onWeekend = isWeekend(item.startTime) || isWeekend(item.endTime);
     const {
       top,
       left,
@@ -194,7 +195,7 @@ class TimelineCalendar extends React.Component {
     return (
       <div
         {...itemProps}
-        className={`rct-item ${selected ? 'selected' : ''}`}
+        className={`rct-item ${onWeekend ? 'weekend' : ''} ${selected ? 'selected' : ''}`}
       >
         <div className="title-project">{item.projectTitle}</div>
         <p className="title-task">{item.taskTitle}</p>
