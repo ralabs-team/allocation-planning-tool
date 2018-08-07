@@ -1,6 +1,13 @@
 import moment from 'moment';
 
-export const getVisiblePeriod = () => {
+export const getVisiblePeriod = (month) => {
+  if (!moment().isSame(month, 'M')) {
+    return {
+      minDate: month,
+      maxDate: moment(month).add(5, 'd'),
+    };
+  }
+
   const now = moment().startOf('d');
   const start = moment(now).startOf('M');
   const end = moment(now).endOf('M');

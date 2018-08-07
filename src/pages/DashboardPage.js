@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 // components
 import TimelineCalendar from '../components/callendar/TimelineCalendar';
@@ -18,6 +19,7 @@ class DashboardPage extends Component {
     changeAllocations: PropTypes.func.isRequired,
     searchData: PropTypes.object.isRequired, // eslint-disable-line
     sortUp: PropTypes.bool.isRequired,
+    visibleMonth: PropTypes.number.isRequired,
   };
 
   componentDidMount() {
@@ -26,13 +28,12 @@ class DashboardPage extends Component {
 
   render() {
     const {
-      users, allocations, searchData, sortUp,
+      users, allocations, searchData, sortUp, visibleMonth,
     } = this.props;
 
     return (
       <div>
-        {
-          users.length &&
+        {users.length &&
           <TimelineCalendar
             employees={users}
             allocations={allocations}
@@ -40,6 +41,8 @@ class DashboardPage extends Component {
             changeAllocations={this.props.changeAllocations}
             searchData={searchData}
             sortUp={sortUp}
+            minTime={visibleMonth}
+            maxTime={moment(visibleMonth).endOf('M').valueOf()}
           />
         }
       </div>
@@ -47,16 +50,13 @@ class DashboardPage extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { users, allocations, search } = state;
-
-  return ({
-    users: users.allUsers,
-    allocations: allocations.allAllocations,
-    searchData: search.searchData,
-    sortUp: search.sortUp,
-  });
-};
+const mapStateToProps = state => ({
+  visibleMonth: state.calendar.visibleMonth,
+  users: state.users.allUsers,
+  allocations: state.allocations.allAllocations,
+  searchData: state.search.searchData,
+  sortUp: state.search.sortUp,
+});
 
 const mapDispatchToProps = dispatch => ({
   getAllocations: bindActionCreators(getAllocations, dispatch),

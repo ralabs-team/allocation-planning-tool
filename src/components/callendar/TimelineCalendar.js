@@ -13,6 +13,7 @@ import 'react-calendar-timeline/lib/Timeline.css';
 import './calendar.css';
 import { getVisiblePeriod, isWeekend } from './helpers';
 import PopUp from './PopUp';
+import Control from './Control';
 import logo from './icon.png';
 
 moment.locale('en-gb');
@@ -29,36 +30,38 @@ class TimelineCalendar extends React.Component {
     const { employees, searchData } = this.props;
 
     this.state = {
-      minTime: moment().startOf('M').valueOf(),
-      maxTime: moment().endOf('M').valueOf(),
       filteredEmployees: employees,
       employeesIds: searchData.employeesIds, // eslint-disable-line
       isOpenPopup: false,
       popupData: {},
     };
 
-    const { minDate, maxDate } = getVisiblePeriod();
+    const { minDate, maxDate } = getVisiblePeriod(this.props.minTime);
     this.visibleTimeStart = minDate.valueOf();
     this.visibleTimeEnd = maxDate.valueOf();
   }
 
-  static getDerivedStateFromProps(props, state) {
+  componentWillReceiveProps(props) {
+    if (this.props.minTime !== props.minTime) {
+      const { minDate, maxDate } = getVisiblePeriod(props.minTime);
+      this.visibleTimeStart = minDate.valueOf();
+      this.visibleTimeEnd = maxDate.valueOf();
+    }
     const newEmployeesIds = props.searchData.employeesIds;
-    const { employeesIds } = state;
+    const { employeesIds } = this.state;
 
     if ((newEmployeesIds && (!employeesIds || newEmployeesIds.length !== employeesIds.length)) ||
       (!newEmployeesIds && employeesIds)) {
       const filteredEmployees = !newEmployeesIds ?
         props.employees : props.employees.filter(item => newEmployeesIds.includes(item._id));
 
-      return {
+      this.setState({
         employeesIds: newEmployeesIds,
         filteredEmployees,
-      };
+      });
     }
-
-    return null;
   }
+
   openNewAllocationModal(group, time) {
     const modalData = {
       type: 'ALLOCATION',
@@ -149,7 +152,7 @@ class TimelineCalendar extends React.Component {
   }
 
   onTimeChange(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) {
-    const { minTime, maxTime } = this.state;
+    const { minTime, maxTime } = this.props;
     let start;
     let end;
     if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
@@ -286,6 +289,7 @@ class TimelineCalendar extends React.Component {
           onAgree={this.openNewAllocationModal}
           data={this.state.popupData}
         />
+        <Control />
       </div>
     );
   }
@@ -297,6 +301,8 @@ TimelineCalendar.propTypes = {
   changeAllocations: PropTypes.func.isRequired,
   searchData: PropTypes.objectOf(PropTypes.array).isRequired,
   sortUp: PropTypes.bool.isRequired,
+  minTime: PropTypes.number.isRequired,
+  maxTime: PropTypes.number.isRequired,
 };
 
 export default TimelineCalendar;

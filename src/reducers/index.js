@@ -7,15 +7,16 @@ import projects from './projects';
 import search from './search';
 import users from './users';
 import auth from './auth';
+import calendar from './calendar';
 
-const appReducer = combineReducers({
+const rootReducer = combineReducers({
   allocations,
   modals,
   projects,
   search,
   users,
   auth,
+  calendar,
 });
-const rootReducer = (state, action) => appReducer(state, action);
 
 export default rootReducer;

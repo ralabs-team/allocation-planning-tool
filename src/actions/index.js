@@ -4,6 +4,7 @@ import { GET_ALLOCATIONS, getAllocations, ADD_ALLOCATION, addAllocation, CHANGE_
 import { SET_SEARCH, setSearch, REVERSE_SORT, reverseSort } from './search';
 import { GET_USERS, getUsers } from './users';
 import { LOG_OUT, logOut } from './auth';
+import { SET_CURRENT_MONTH, setCurrentMonth, SET_PREV_MONTH, setPrevMonth, SET_NEXT_MONTH, setNextMonth } from './calendar';
 
 export {
   OPEN_MODAL,
@@ -26,4 +27,10 @@ export {
   getUsers,
   LOG_OUT,
   logOut,
+  SET_CURRENT_MONTH,
+  setCurrentMonth,
+  SET_PREV_MONTH,
+  setPrevMonth,
+  setNextMonth,
+  SET_NEXT_MONTH,
 };

@@ -29,5 +29,6 @@ module.exports = {
         "class-methods-use-this": "off",
         "import/prefer-default-export": "off",
         "no-mixed-operators": "off",
+        "arrow-body-style": "off",
     }
 };
