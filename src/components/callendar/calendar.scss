@@ -31,7 +31,7 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
 .react-calendar-timeline {
   $main-color: #F2F7FA;
 
-  margin-bottom: 100px;
+  margin-bottom: 80px;
   .rct-item {
     @include ITEM_FONT;
     position: absolute;
@@ -191,18 +191,22 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
 
 
 .control-panel {
-  $margin: 30px;
+  $margin: 20px;
 
   position: fixed;
   bottom: $margin;
   right: $margin;
   z-index: 200;
   button {
-    $margin-button: 5px;
+    $size: 40px;
+    $margin-button: $size / 10;
+    width: $size;
+    height: $size;
+    min-height: 0;
     margin-left: $margin-button;
     margin-right: $margin-button;
-  }
-  .icon {
-    font-size: 40px;
+    .icon {
+      font-size: $size * 0.75;
+    }
   }
 }
