@@ -40,25 +40,6 @@ class TimelineCalendar extends React.Component {
     this.visibleTimeStart = minDate.valueOf();
     this.visibleTimeEnd = maxDate.valueOf();
   }
-  setZoom(value) {
-    const start = this.visibleTimeStart + value;
-    const end = this.visibleTimeEnd - value;
-    const delta = end - start;
-    const isCorrectDelta = _.inRange(delta, minZoom, maxZoom + 1);
-    if (!isCorrectDelta) return;
-
-    if (start <= this.props.minTime) {
-      this.visibleTimeStart = this.props.minTime;
-      this.visibleTimeEnd = this.props.minTime + delta;
-    } else if (end >= this.props.maxTime) {
-      this.visibleTimeEnd = this.props.maxTime;
-      this.visibleTimeStart = this.visibleTimeEnd - delta;
-    } else {
-      this.visibleTimeStart = start;
-      this.visibleTimeEnd = end;
-    }
-    this.forceUpdate();
-  }
 
   componentWillReceiveProps(props) {
     if (this.props.minTime !== props.minTime) {
@@ -88,6 +69,19 @@ class TimelineCalendar extends React.Component {
       data: {
         employee: _.find(this.props.employees, ['_id', group]),
         initialTime: time,
+        allocation: null,
+      },
+    };
+
+    this.props.openModal(modalData);
+  }
+  openProfileModal(group) {
+    const modalData = {
+      type: 'ALLOCATION',
+      mode: 'create',
+      data: {
+        employee: _.find(this.props.employees, ['_id', group]),
+        initialTime: null,
         allocation: null,
       },
     };
@@ -192,6 +186,26 @@ class TimelineCalendar extends React.Component {
     updateScrollCanvas(start, end);
   }
 
+  setZoom(value) {
+    const start = this.visibleTimeStart + value;
+    const end = this.visibleTimeEnd - value;
+    const delta = end - start;
+    const isCorrectDelta = _.inRange(delta, minZoom, maxZoom + 1);
+    if (!isCorrectDelta) return;
+
+    if (start <= this.props.minTime) {
+      this.visibleTimeStart = this.props.minTime;
+      this.visibleTimeEnd = this.props.minTime + delta;
+    } else if (end >= this.props.maxTime) {
+      this.visibleTimeEnd = this.props.maxTime;
+      this.visibleTimeStart = this.visibleTimeEnd - delta;
+    } else {
+      this.visibleTimeStart = start;
+      this.visibleTimeEnd = end;
+    }
+    this.forceUpdate();
+  }
+
   // calendar renderers
   itemRenderer({
     item,
@@ -232,7 +246,7 @@ class TimelineCalendar extends React.Component {
 
   groupRenderer({ group }) {
     return (
-      <div className="group-item">
+      <div className="group-item" onClick={() => this.openProfileModal(group.id)}>
         <span className="name">{group.title}</span>
         {group.position &&
           <span className="position">{group.position}</span>
