@@ -18,7 +18,7 @@ import logo from './icon.png';
 
 moment.locale('en-gb');
 
-const minZoom = 1000 * 60 * 60 * 24 * 5; // 5 days
+const minZoom = 1000 * 60 * 60; // 1 hour
 const maxZoom = 1000 * 60 * 60 * 24 * 30; // month
 const dragSnap = 60 * 60 * 1000 * 24; // day
 
@@ -39,6 +39,25 @@ class TimelineCalendar extends React.Component {
     const { minDate, maxDate } = getVisiblePeriod(this.props.minTime);
     this.visibleTimeStart = minDate.valueOf();
     this.visibleTimeEnd = maxDate.valueOf();
+  }
+  setZoom(value) {
+    const start = this.visibleTimeStart + value;
+    const end = this.visibleTimeEnd - value;
+    const delta = end - start;
+    const isCorrectDelta = _.inRange(delta, minZoom, maxZoom + 1);
+    if (!isCorrectDelta) return;
+
+    if (start <= this.props.minTime) {
+      this.visibleTimeStart = this.props.minTime;
+      this.visibleTimeEnd = this.props.minTime + delta;
+    } else if (end >= this.props.maxTime) {
+      this.visibleTimeEnd = this.props.maxTime;
+      this.visibleTimeStart = this.visibleTimeEnd - delta;
+    } else {
+      this.visibleTimeStart = start;
+      this.visibleTimeEnd = end;
+    }
+    this.forceUpdate();
   }
 
   componentWillReceiveProps(props) {
@@ -289,7 +308,9 @@ class TimelineCalendar extends React.Component {
           onAgree={this.openNewAllocationModal}
           data={this.state.popupData}
         />
-        <Control />
+        <Control
+          setZoom={this.setZoom}
+        />
       </div>
     );
   }

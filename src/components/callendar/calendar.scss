@@ -189,4 +189,12 @@ $item-border_selected: $item-border-size solid rgba(0, 0, 0, 0.25);
   bottom: $margin;
   right: $margin;
   z-index: 200;
+  button {
+    $margin-button: 5px;
+    margin-left: $margin-button;
+    margin-right: $margin-button;
+  }
+  .icon {
+    font-size: 40px;
+  }
 }
