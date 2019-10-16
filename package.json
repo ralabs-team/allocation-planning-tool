@@ -14,7 +14,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-autobind": "^1.0.6",
-    "react-calendar-timeline": "0.18.2",
+    "react-calendar-timeline": "latest",
     "react-day-picker": "^7.1.10",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",

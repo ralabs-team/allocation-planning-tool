@@ -28,5 +28,7 @@ module.exports = {
         "react/sort-comp": "off",
         "class-methods-use-this": "off",
         "import/prefer-default-export": "off",
+        "no-mixed-operators": "off",
+        "arrow-body-style": "off",
     }
 };
